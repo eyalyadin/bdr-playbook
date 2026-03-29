@@ -758,6 +758,12 @@ tr:hover td { background: var(--surface3) !important; }
         <p>Select a common objection or type your own — get the exact playbook response.</p>
       </div>
 
+      <div class="sec">Magic Paragraphs — Use Mid-Call</div>
+      <div class="pill-grid">
+        <div class="pill" onclick="pickObj(this,'magic_dev')"><span class="pill-icon">💻</span>Dev / Engineering persona</div>
+        <div class="pill" onclick="pickObj(this,'magic_qa')"><span class="pill-icon">🔍</span>QA / QE persona</div>
+      </div>
+
       <div class="sec">Common Objections</div>
       <div class="pill-grid">
         <div class="pill" onclick="pickObj(this,'send_email')"><span class="pill-icon">📧</span>Send me an email</div>
@@ -1227,6 +1233,42 @@ It also identifies modified code that hasn't been tested yet — so you can bloc
 // HARDCODED OBJECTION RESPONSES
 // ─────────────────────────────────────────────
 const OBJECTIONS = {
+  magic_dev: `## 💻 Magic Paragraph — Dev / Engineering Persona
+
+**Start with this discovery question:**
+"Just out of curiosity — do you run **ALL** of your tests ALL the time?"
+
+*(If yes → "How long does it usually take to run a full suite of E2E or regression tests?")*
+
+---
+
+**Then deliver this:**
+"I'd just like to note that SeaLights isn't a test automation or framework tool — but rather **a layer of AI that sits on top of your CI/CD** that knows how to correlate code changes to specific tests, and then automatically prioritizes your test strategy accordingly.
+
+So when your team needs quick feedback during a hotfix, for example — they would run only the critical subset of tests related to those changes. You optimize speed on one hand, and prevent escaping defects on the other.
+
+If this topic interests you, or you think it would be useful for your department or team — the main intention of the call is to perhaps schedule a short demonstration to show you how it works. I think you'd be genuinely impressed by it."
+
+---
+
+## 📞 CTA:
+"Would you have some time later this week? I'd love to set up a 20-minute session with one of our engineers."`,
+
+  magic_qa: `## 🔍 Magic Paragraph — QA / QE Persona
+
+**Deliver this:**
+"SeaLights isn't a test framework or automation tool — but rather **a layer of AI that sits on top of your CI/CD**, showing you where you have testing gaps, quality risks like untested code changes, and preventing them from reaching production.
+
+It covers **ALL test stages** — not just unit tests — and recommends which subset of tests needs to be executed in every run, so your team isn't wasting time running tests that aren't relevant to recent changes.
+
+It also identifies modified code that hasn't been tested yet — so you can block it before it hits production."
+
+---
+
+## 📞 CTA:
+"If this sounds relevant to the challenges your QA team is dealing with — the main intention is to schedule a short demo with one of our product experts. Would you have some time this week or next?"`,
+
+
   send_email: `## 📧 "Send me an email"
 
 **What to say:**
@@ -1729,6 +1771,8 @@ function runScript() {
 // OBJECTION HANDLER
 // ─────────────────────────────────────────────
 const OBJ_LABELS = {
+  magic_dev: 'Magic Paragraph — Dev / Engineering persona',
+  magic_qa:  'Magic Paragraph — QA / QE persona',
   send_email: 'Send me an email',
   inhouse_solution: 'We have an inhouse solution',
   already_tool: 'We already have a tool',
