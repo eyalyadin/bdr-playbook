@@ -1172,8 +1172,17 @@ async function callGemini(prompt) {
     throw new Error('No API key set. Please add your Gemini API key.');
   }
 
-  // Try gemini-2.0-flash first, fall back to gemini-1.5-flash
-  const models = ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-flash-latest'];
+  // Try all available free-tier models in order of preference
+  const models = [
+    'gemini-2.0-flash',
+    'gemini-2.0-flash-lite',
+    'gemini-1.5-flash',
+    'gemini-1.5-flash-8b',
+    'gemini-1.5-flash-latest',
+  ];
+
+  let lastError = null;
+  let allQuotaExhausted = true;
 
   for (const model of models) {
     try {
@@ -1198,34 +1207,63 @@ async function callGemini(prompt) {
         })
       });
 
-      if (response.status === 404) continue; // model not found, try next
+      // Model doesn't exist — try next
+      if (response.status === 404) { lastError = `Model ${model} not found`; continue; }
+
+      const data = await response.json().catch(() => ({}));
 
       if (!response.ok) {
-        const err = await response.json().catch(() => ({}));
-        const msg = err?.error?.message || `HTTP ${response.status}`;
-        // If it's an auth error, no point trying other models
-        if (response.status === 400 || response.status === 401 || response.status === 403) {
-          throw new Error(`API key error: ${msg}. Please check your Gemini API key in Settings.`);
+        const msg = data?.error?.message || `HTTP ${response.status}`;
+
+        // Invalid key — no point trying other models
+        if (response.status === 401 || response.status === 403 ||
+            msg.toLowerCase().includes('api key not valid') ||
+            msg.toLowerCase().includes('invalid api key')) {
+          throw new Error('❌ Invalid API key. Click "Setup API Key" (top right) and re-enter your key from aistudio.google.com.');
         }
-        continue; // try next model
+
+        // Quota exhausted on this model — try next one
+        if (response.status === 429 || msg.toLowerCase().includes('quota')) {
+          lastError = `quota_exceeded`;
+          continue;
+        }
+
+        // Other error — try next model
+        lastError = msg;
+        allQuotaExhausted = false;
+        continue;
       }
 
-      const data = await response.json();
       const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
       if (text) return text;
-      throw new Error('Empty response from API.');
+
+      lastError = 'Empty response';
+      continue;
+
     } catch (e) {
-      if (e.message.includes('API key error') || e.message.includes('fetch')) {
-        // Re-throw auth errors and network errors immediately
-        if (e.message.includes('Failed to fetch') || e.message.includes('NetworkError')) {
-          throw new Error('Network error — make sure you are connected to the internet and that your browser is not blocking the request. If using a file:// URL, please host the app on GitHub Pages instead.');
-        }
-        throw e;
+      // Re-throw errors we intentionally threw above
+      if (e.message.startsWith('❌')) throw e;
+
+      if (e.message.includes('Failed to fetch') || e.message.includes('NetworkError') || e.name === 'TypeError') {
+        throw new Error('🌐 Network error — check your internet connection and try again.');
       }
-      if (model === models[models.length - 1]) throw e; // last model, throw
+
+      lastError = e.message;
+      continue;
     }
   }
-  throw new Error('Could not connect to Gemini API. Please verify your API key at aistudio.google.com.');
+
+  // All models failed — give a helpful message
+  if (lastError === 'quota_exceeded' || allQuotaExhausted) {
+    throw new Error(
+      '⏳ Daily quota reached on all free models.\n\n' +
+      'You have 2 options:\n' +
+      '1. Wait until tomorrow — the free quota resets every 24 hours.\n' +
+      '2. Go to aistudio.google.com → "Get API key" → create a NEW key and paste it in Settings (top right).'
+    );
+  }
+
+  throw new Error('❌ Could not get a response. Please check your API key in Settings and try again.');
 }
 
 function showLoading(el) {
