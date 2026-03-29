@@ -1172,13 +1172,13 @@ async function callGemini(prompt) {
     throw new Error('No API key set. Please add your Gemini API key.');
   }
 
-  // Try all available free-tier models in order of preference
+  // Current free-tier models as of March 2026
   const models = [
-    'gemini-2.0-flash',
-    'gemini-2.0-flash-lite',
+    'gemini-2.5-flash-preview-04-17',
+    'gemini-2.5-flash',
+    'gemini-2.5-flash-lite-preview-06-17',
+    'gemini-2.5-pro',
     'gemini-1.5-flash',
-    'gemini-1.5-flash-8b',
-    'gemini-1.5-flash-latest',
   ];
 
   let lastError = null;
