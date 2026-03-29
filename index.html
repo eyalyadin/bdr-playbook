@@ -976,329 +976,29 @@ tr:hover td { background: var(--surface3) !important; }
 <!-- ══════════ SETTINGS MODAL ══════════ -->
 <div class="modal-bg" id="settingsModal">
   <div class="modal">
-    <h2>⚙️ Connect Gemini API</h2>
-    <p>Your key is stored only in this browser — never sent anywhere except directly to Google's API.</p>
+    <h2>✅ No API Key Needed</h2>
+    <p>The entire SeaLights BDR Playbook is built directly into this app. All scripts, objections, email templates, next steps, and qualification logic work instantly — no internet connection or API key required.</p>
     <div class="how-to">
-      <strong>Get your free key in 2 minutes:</strong><br>
-      1. Go to <strong><a href="https://aistudio.google.com" target="_blank">aistudio.google.com</a></strong><br>
-      2. Sign in with your Google account<br>
-      3. Click <strong>"Get API Key"</strong> → <strong>"Create API key"</strong><br>
-      4. Copy and paste it below
+      <strong>What's included:</strong><br>
+      📞 8 full call scripts — personalized with prospect name &amp; company<br>
+      🛡️ 12 objection responses — exact playbook wording<br>
+      ✉️ 6 email templates — auto-filled with your inputs<br>
+      📋 9 after-call next step guides — with dispo codes<br>
+      ✅ Instant lead qualification — keyword-based ICP checker
     </div>
-    <div class="form-group" style="margin-bottom:8px">
-      <label class="form-label">Gemini API Key</label>
-      <input class="form-input" id="apiKeyInput" type="password" placeholder="AIza...">
-    </div>
-    <div class="test-msg" id="testMsg"></div>
-    <div class="info-box">🔒 Free tier = up to 1,500 requests/day. Key resets every 24 hours.</div>
+    <div class="info-box">💡 Everything works offline. No API key, no quota limits, no errors.</div>
     <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="testKey()">🧪 Test Key</button>
-      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
-      <button class="btn btn-primary" onclick="saveKey()">Save &amp; Connect</button>
+      <button class="btn btn-primary" onclick="closeModal()">Got it</button>
     </div>
   </div>
 </div>
 
 <script>
 // ─────────────────────────────────────────────
-// PLAYBOOK KNOWLEDGE BASE
-// ─────────────────────────────────────────────
-const PLAYBOOK = `
-SEALIGHTS BDR PLAYBOOK — FULL KNOWLEDGE BASE
-
-=== ABOUT SEALIGHTS ===
-SeaLights is a Quality Intelligence platform within Tricentis. It helps teams save on the costs of testing while increasing their release speed by executing only the relevant tests based on code changes for each build and release. It also shows gaps in test suites and flags untested code changes to prevent them from reaching production using smart quality gates.
-Key capabilities:
-- Test Impact Analytics: Auto-select and execute only the critical tests related to code changes for every test type and stage. Teams see 50-80% reduction in regression cycles.
-- Test Gap Analytics / Code Changes Coverage: Automatic identification of untested code changes for every type of test, including UI, E2E, Regression, and manual. Blocks untested code from reaching production.
-- Advanced Code Coverage: Identify which code methods are covered and which are not covered per build, sprint, and release.
-- AI Test Generation: SeaLights uses AI to automatically generate tests for untested code changes, based on the context of each user story, reducing manual work and speeding up test development.
-- Integrates with: Tosca, qTest, Jenkins, GitHub, Azure DevOps, Jira, and more.
-- Supported languages: Java, JavaScript/Angular/React/TypeScript/NodeJS, Scala, Python, C#, .NET, Go, C++ (GCC), C (GCC)
-- NOT supported: Mobile (iOS/Android), Salesforce, Ruby, Oracle, PHP, HTML, Linux
-- Results: Up to 80% fewer escaped defects, 50-90% reduction in test cycle time
-
-=== COLD CALL SCRIPT — BARBARA SCRIPT ===
-"I'm actually calling as a follow-up to a conversation you had with a colleague of mine named Barbara a few months ago. I know it's been a while but do you recall it by any chance or would a short refresh help?
-I'll be very brief. So SeaLights is a Quality Intelligence platform within Tricentis, it knows how to skip tests that are not related to code changes so you can execute only the critical, small subset of tests to reduce your test cycle times and release much faster! It does that for every test type: UI, Regression, End to End... Both Manual and Automated!
-So I was wondering, do you have any long E2E or regression testing cycles at the moment? / Do you have any long CI cycles or gaps in your test suites?"
-
-CTA 1: "I see, the main intention of the call is to perhaps schedule a short demonstration of SL with one of our engineers to showcase how your team will be able to optimize your long tests and prevent escaping defects. If you have the time later on this week, I'd be happy to schedule it."
-CTA 2: "...showcase how your team will be able to guarantee higher quality releases by flagging untested code changes and preventing them from reaching production using smart quality gates."
-CTA 3: "...showcase how you'll be able to optimize manual and automated tests but also prevent escaping defects."
-
-=== SHORT & FOCUSED PITCH (ADVANCED) ===
-"SeaLights is a Quality Intelligence Platform within Tricentis. It helps teams save on the costs of testing while increasing their release speed by executing only the relevant tests based on code changes for each build and release. It also shows gaps in test suites and flags untested code changes to prevent them from reaching production using smart quality gates.
-Our newest AI capabilities include test generation based on code changes, which is extraordinary.
-I was wondering if you have long CI cycles or gaps in your test suites?"
-
-=== WHITE PAPER SCRIPT ===
-"I'm calling since you've downloaded several WPs of ours recently. I was wondering what prompted your interest and if you're familiar with us at all."
-
-=== AI FEATURE SCRIPT (OUTBOUND) ===
-"I'm following up on a previous conversation you had with one of my team members a few months ago. Do you recall it by any chance or would a short refresh help?
-Alright I'll be very brief - Sealights is a quality intelligence platform within Tricentis that leverages AI to optimize test execution and prevent escaping defects. It does that by generating missing test cases based on code changes for the user stories they're related to.
-It also flags modified code that hasn't been tested and skips tests that aren't related to code changes. It does that for all test types - E2E, Regression... both manual and automated.
-Most teams we speak with aren't leveraging AI within their testing efforts - they don't know which tests are missing and which tests they need to develop.
-So I was just wondering - does your team struggle with long CI cycles or escaping defects in production?"
-
-=== ZOOM QUALIFICATION SCRIPT ===
-INTRO: "Hi [Prospect Name], thanks for joining. How are you? My name is [BDR Name], and I'm in charge of business development for Tricentis Sealights. I reached out after researching [Account Name] to identify if we could help solve a few challenges. I came across your profile, and I believe there's a good chance our offerings could benefit your group. My goal today is to elaborate on SL's capabilities and see if we could fit into your workflows and initiatives to schedule a more technical and in-depth overview of the platform with my senior director. Did you get a chance to watch the video attached to the invite?"
-
-Required qualifications to gather: Title (fits ICP), Programming languages, Team size, Type of app (customer-facing/internal), Release frequency, Organizational structure (separate QA team or engineers doing QA), Manual or heavy automation, Types of tests, Escaping defects, Regulations/proof of testing (financial/healthcare/insurance).
-
-PAIN DISCOVERY: "Normally, we're able to identify 2 critical areas where executives like yourself find SL relevant.
-The first one being slow releases. Teams find it difficult to understand which tests are most critical to the upcoming release, making them continuously add new tests and run all of them all the time. This creates a 'snowball' effect, leading to long E2E or regression test cycles, delaying time-to-market, and creating inefficiencies.
-Additionally, most SW teams aren't able to identify areas of the code that haven't been tested properly, specifically newly added or modified code. This creates a gap in test execution, leading to the promotion of untested code changes into production, resulting in escaping defects.
-Out of these two, which one resonates with you the most?"
-
-CLOSING: "So, based on our call today seems like SL could definitely be of help, and I'd like to schedule a demo of the platform with my senior director to discuss the architecture and illustrate a few success stories. When would you have time this week or the next one?"
-
-=== DEMO HANDOFF TO AE ===
-"Hi [Prospect Name], thank you so much for joining how are you? So let me do a quick round of introductions... My name is [BDR Name] and I work closely with [AE Name] who'll be leading the conversation over Sealights. [AE Name] has been with us for quite some time and has worked with many of our customers similar to [Account Name].
-[Prospect Name], when we spoke on the phone a week ago you let me know that your primary interest was understanding how to:
-1. Optimize your test execution as your team currently runs all tests all the time
-2. Prevent escaping defects from reaching production by gaining visibility to modified code that hasn't been tested.
-3. Reduce costs of testing by allocating your resources more efficiently.
-You also let me know that your team primarily develops in [programming language] inhouse right? Great, so thanks again for your time! I'll be handing it off to [AE name] to take it on from here. Enjoy!"
-
-=== MAGIC PARAGRAPH — DEV/ENG PERSONA ===
-"Just out of curiosity, do you run ALL of your tests ALL the time? YES → How long does it usually take to run a full suite of E2E or regression tests?
-I'd just like to note that SL isn't a test automation or framework tool, but rather a layer of AI that sits on top of your CI/CD that knows how to correlate code changes to specific tests and then automatically prioritize your test strategy accordingly.
-So when your team needs quick feedback during a hotfix for example – they would run only the critical subset related to changes. So you optimize on one hand but also prevent escaping defects.
-So if this topic interests you, or you think it would be useful for your department or team, the main intention of the call is to perhaps schedule a short demonstration of it just to show you how it works. I think you'd be amused by it."
-
-=== MAGIC PARAGRAPH — QA/QE PERSONA ===
-"SL isn't a test framework or automation tool, but rather a layer of AI that sits on top of your CI/CD, showing you where you have testing gaps, quality risks like untested code changes and preventing them from reaching production.
-It is able to cover ALL test stages, not just unit tests, and recommends which subset of tests need to be executed in every run."
-
-=== OBJECTION HANDLING ===
-
-OBJECTION: Send me an email / I'll provide info over email
-RESPONSE: "I can provide you all the information over email, but from my experience – what I find most efficient, as most of my emails go to spam, is to perhaps set a tentative slot on the calendar and I'll provide the information there. That way you'll be able to go over the material and we'll have a placeholder for us not to forget as I'm sure you're very busy. So if you have some time next week you know is generally available, I'll send you an invite quickly."
-
-OBJECTION: We have an inhouse solution
-RESPONSE: "Excellent! It's good to hear that your team acknowledges the challenges we help solve. I just have to say that we do have some customers similar to you that tried to develop this solution in house, by themselves, and they just couldn't reach the level of accuracy and efficiency. There is no other tool that knows how to do code-to-test mapping for ALL test types to flag untested modified code and skip tests that are not related to code changes."
-
-OBJECTION: We already use Tricentis / another automation platform
-RESPONSE: "That's great to hear! SeaLights was built to complement that. It integrates natively with Tosca, qTest, Jenkins, GitHub, Azure, and more. In fact, many of our existing Tricentis customers already have SeaLights installed and are using it to extend their visibility beyond test automation - directly into their CI/CD pipelines and code changes."
-
-OBJECTION: We don't have budget
-RESPONSE: "Thanks for being upfront regarding your budget and I am glad you find the platform interesting. To be frank our sales cycles take about 3 quarters so we're not aiming for this quarter's or the next budget... The main intention here is to showcase the platform to you and see if we fit into your initiatives and technology, also set a point of contact with my senior director for future reference. So if you have some time later on this week, I'd be happy to schedule it."
-
-OBJECTION: I'm not a DM
-RESPONSE: "That's alright, we're not looking for any DMs at this point – just primarily the personas who are dealing with the issues we help solve to see if there's any relevance to your practice. In the demo we'll discuss the challenges we help solve, the architecture behind it and the platform itself. I believe you'd be amused by it. So if this topic interests you, or you think it would be useful for your department or team, the main intention of the call is to perhaps schedule a short demonstration of it just to show you how it works."
-
-OBJECTION: Not relevant / That's not our focus
-RESPONSE: "I see - well, the interesting thing is that SeaLights goes way beyond overall code coverage visibility. It's really about engineering efficiency and release confidence. For example, SeaLights automatically detects new or changed code that hasn't been tested yet and uses AI to generate the missing tests based on the changes made, helping your teams close those gaps and increase efficiency. Ultimately SeaLights will reduce wasted time, improve developer productivity, and help you release faster with less risk."
-
-OBJECTION: How does it work?
-RESPONSE: "That's a great question, to be honest with you the main intention of the call is to showcase the platform to you with one of our product experts who'll be able to give you a more technical answer than I can provide, I don't want to mislead you. You'll discuss the platform in further detail, I believe you'd be amused by it. So if you have time later on this week, I'd be happy to set that up."
-
-OBJECTION: I don't handle QA
-RESPONSE: "That's alright, it's not aimed just for QA teams – SL integrates with Jira and Azure DevOps to provide modified code coverage at the User Story level. It provides a breakdown of code coverage, for each user story, so you can see if you have user stories that are not tested, by EVERY test type, and what's their exact code coverage, so your team can know exactly where you have gaps, and which tests to develop. We also show you if you have code methods that have been changed and were not tested, meaning Code Changes Coverage, per build, per release, per sprint and per User Story."
-
-OBJECTION: We use SonarQube / we already have a coverage tool
-RESPONSE: "Actually, Sonar is completely different; most of our customers actually use SonarQube or Jacoco. While Sonar provides partial coverage, and only for the Unit Test level, SeaLights provides coverage for all test types such as E2E, Regression, Integration, whether they are manual or automated. SeaLights provides much more than Coverage, it will also skip irrelevant tests that you don't need to execute, those who are not related to recent code changes, and more..."
-
-OBJECTION: I'm not the right person
-RESPONSE: "Oh sure, totally understand, just to make sure I'm not completely off here, are you more focused on the engineering side, or are testing and releasing visibility handled by someone else on your team? [If they say 'I lead dev, but this sounds more QA-ish'] I see. Well, I just want to point out the fact that SeaLights isn't just a QA tool, it's really about improving CI/CD efficiency and giving dev teams faster feedback on whether their code is properly covered or introducing new risks. So many of our engineering leads use it to optimize test cycles and spot quality risks early."
-
-OBJECTION: High-Level Exec / C-Level objection
-RESPONSE: "I understand that it isn't part of your responsibilities to attend demos. From my experience, executives like yourself find SL interesting and relevant as it is a strategic tool designed to help large organizations like [Account Name] shift left and change their testing practices by: 1) Having the visibility to modified code that hasn't been tested and preventing it from reaching production. 2) Allocating resources more efficiently by focusing test execution on the critical tests only and skipping irrelevant ones. What I'm proposing is to showcase some success stories of our customers and explain how it works with the executives from my end. We will proceed with the proper channels as you prefer."
-
-=== EMAIL TEMPLATES ===
-
-COLD CALL FOLLOW-UP EMAIL:
-Subject: Reduce testing cycle time without compromising quality
-"Hi [Name],
-It was a pleasure speaking with you today, I hope we reconnect soon.
-Tricentis SeaLights is a next-generation Quality Intelligence platform designed for enterprise quality engineering teams. It empowers Dev and QA teams to accelerate testing cycles and increase quality.
-SeaLights capabilities:
-- Test impact analytics - Auto-select and execute only the critical tests related to code changes for every test type and stage.
-- Test gap analytics - Block untested code changes from reaching production.
-- Generate tests with AI: SeaLights uses AI to automatically generate tests for untested code changes, based on the context of each user story.
-- Advanced code coverage - Gain comprehensive code coverage for every test type
-5-minute overview: https://tricentis-video.wistia.com/medias/xkidbjli0a
-I'd appreciate the opportunity to showcase our solution in a short demonstration with one of my executives.
-Best,"
-
-NO RESPONSE FOLLOW-UP:
-"Hi [Name],
-Did you get a chance to review my previous email? I really hope we could meet this week."
-
-SUGGESTED INVITE / MEETING:
-Subject: [Company] <> SeaLights | Introduction
-"Hi [Name], to follow up on our previous conversation - I set a tentative slot for us to showcase SeaLights for your quality initiatives and leveraging AI within your processes. I hope this works for you!
-Watch a 5-minute overview of Tricentis SeaLights: https://tricentis-video.wistia.com/medias/xkidbjli0a
-In this session, we will cover how SeaLights Quality Intelligence Platform can help with:
-- Generate missing tests with AI
-- Reduce long & expensive testing cycles (save up to 90% of release cycle time)
-- Minimize production defects
-- Focus your organizational quality strategy
-Best regards,"
-
-MEETING DECLINED FOLLOW-UP:
-"Thanks for letting me know [Name]. Would [New Time] work better for you?"
-
-MEETING ACCEPTED:
-"Thanks for accepting my invite [First name], looking forward. Also, to tailor the session to your needs, could you please share the primary programming languages your teams use to develop your homegrown applications? (e.g. Java, C++, Python)?"
-
-=== LINKEDIN MESSAGING SEQUENCE ===
-
-CONNECTION REQUEST: "Hi [Prospect Name], in light of your experience in software engineering, I'd like to connect."
-
-FIRST MESSAGE (after connecting):
-"Hi [Prospect Name], glad to be connected! To follow up on our conversation, I wanted to invite you to a live demonstration over Zoom on SeaLights.
-During this session, you will discover how to:
-1. Shorten your testing cycles by 50%-90% by executing only the tests that are directly related to code changes.
-2. Identify and block untested code changes from reaching production at any test stage, including E2E, Regression, Integration, and Manual testing.
-Can we schedule a 30-minute meeting for this or next week?"
-
-SECOND MESSAGE:
-"Hi again, [Prospect Name]. One of our customers, a leading cybersecurity firm, reduced its CI Cycle Time by 88% with Test Impact Analytics. By automatically selecting only tests related to code changes, the team reduced build time by 35 minutes. Over a year, they saved 700+ hours of CI and developer time. Would next [Day] work for you?"
-
-THIRD MESSAGE:
-"Hi there, [Prospect Name]! Did you get a chance to review my previous messages? I really hope we can meet next week."
-
-=== AUTOMATION MEETING HANDLING ===
-
-DECLINED MEETINGS:
-1. Move meeting 2 business days forward
-2. Send: "Thanks for letting me know [Name]. Would [New Time] work better for you?"
-3. Wait for response
-4. If positive → Qualify → Delete suggested word from invite → Change color to green
-5. If no response → Check WhatsApp. If reachable → Ask Adi to message. If not → Let Adi know
-
-TENTATIVE MEETINGS:
-1. Respond ASAP
-2. Move meeting 2 hours forward
-3. Send: "Hi, I saw you tentatively accepted, does this time work better for you?"
-4. Try to reach by phone
-5. If positive → Qualify → Change color green. If no answer → Check WhatsApp
-
-PROPOSED NEW TIME:
-1. Respond ASAP
-2. Send: "Hi [First Name], this time works – I just sent an updated invite. Did it come through?"
-3. Try to reach by phone
-
-ACCEPTED MEETINGS:
-1. Check who confirmed (lead or assistant)
-2. If lead confirmed: Send "Thanks for accepting my invite [first name], looking forward. Also, to tailor the session, could you please share the primary programming languages your teams use?"
-3. Wait 1 hour, then call directly to qualify
-4. Must qualify BEFORE the meeting: programming language, valid pain, ICP title, supported tech stack
-
-IMPORTANT PRINCIPLES:
-- Speed is Everything: When a lead replies, they're at their desk. Engage immediately.
-- We don't give up on leads: Keep calling, keep following up until we book
-- We must qualify: Must talk to the lead and qualify PRIOR to the meeting
-- Keep things organized: Set reminders, mark Accepted, use different colors
-
-=== CALL DISPOSITION REASONS ===
-Not interested now (NIN): Relevant person but not interested
-Irrelevant territory (IT): Relevant person but wrong territory (India/Iran)
-Too low level (TLL): Relevant person but manager/engineer level
-Irrelevant Persona (IP): Not related to software
-Company too small (CTS)
-Too immature (TI): No CI/CD, not enough development
-Tech Stack Not Supported (TSNS)
-Irrelevant company (IC)
-Follow-up Hang-up (FUHU): Didn't hear pitch
-Follow-up Interested (FUI): Heard pitch, interested
-Demo Scheduled (DS)
-
-=== S1 QUALIFICATION CRITERIA ===
-- Relevant ICP: Director and above, Tier 1 or Tier 2 account
-- Supported Tech Stack
-- Valid Pain: Escaping Defects, Long CI Cycles, Excessive Manual Efforts, Inefficient Automation, High Costs, Developer Productivity, Speed Up Releases
-
-=== S2 CRITERIA ===
-- Prospect is qualified DM with buying power OR has access to executive sponsor
-- Validated pain to be solved in 3 quarter timeframe
-- Technical Demo scheduled and confirmed
-
-=== ICP QUALIFICATIONS ===
-A lead will be marked as Qualified only if:
-- Title/Campaign does NOT contain SAP, ABAP, or S/4HANA
-- Role level is NOT "Low Level" (includes consultants as low level)
-- Company name does NOT include School, University, or Tricentis
-- Vertical is NOT public sector
-- Industry is NOT: Business Services, Education, Churches, Non-Profit, Consultants, Government
-- Account Geo is NOT in LATAM, APAC, EMEA, or Middle East
-- SeaLights ARR is 0 or blank
-- Email domain is NOT @tricentis.com
-
-=== DAILY GAMEPLAN FRAMEWORK ===
-Each morning check:
-- How many S0s do I have for current month?
-- How many S1s do I have for current month?
-- What's the gap from target and sub-target?
-- Am I on track? Off track?
-- What are my conversion rates?
-- Gameplan: New leads? Strategize? Focus on follow-ups? Different geo?
-
-=== EXISTING CUSTOMERS (FOR REFERENCE) ===
-Financial: Fidelity, Discover, Northern Trust, PayPal, Capital One, JPMorgan, Citizens Bank, Deutsche Bank, BMO, City National Bank
-Insurance: HCSC, Elevance Health, Intact, CNA Financial
-Manufacturing: Jabil, Cisco, Dell, Smith & Nephew
-Telecom, Software: Sophos, Global Payments, Veeva, ADP
-Energy: GE Vernova | Medical: GE Healthcare | Media: Pluto TV (Paramount)
-`;
-
-// ─────────────────────────────────────────────
 // STATE
 // ─────────────────────────────────────────────
 let activeScript = '';
 let activeOutcome = '';
-
-// ─────────────────────────────────────────────
-// API KEY
-// ─────────────────────────────────────────────
-function updateStatus() {
-  const key = localStorage.getItem('sl_api_key');
-  const dot = document.getElementById('statusDot');
-  const txt = document.getElementById('statusText');
-  if (key) { dot.classList.add('on'); txt.textContent = 'API Connected'; }
-  else { dot.classList.remove('on'); txt.textContent = 'Connect API Key'; }
-}
-updateStatus();
-
-function openModal() {
-  document.getElementById('settingsModal').classList.add('open');
-  const k = localStorage.getItem('sl_api_key');
-  if (k) document.getElementById('apiKeyInput').value = k;
-}
-function closeModal() { document.getElementById('settingsModal').classList.remove('open'); }
-
-function saveKey() {
-  const k = document.getElementById('apiKeyInput').value.trim();
-  if (!k) { alert('Please enter a key.'); return; }
-  localStorage.setItem('sl_api_key', k);
-  updateStatus();
-  closeModal();
-}
-
-async function testKey() {
-  const k = document.getElementById('apiKeyInput').value.trim();
-  const msg = document.getElementById('testMsg');
-  if (!k) { msg.innerHTML = '<span style="color:var(--accent)">Enter a key first.</span>'; return; }
-  msg.innerHTML = '<span style="color:var(--text-dim)">Testing...</span>';
-  try {
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${k}`,
-      { method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ contents:[{role:'user',parts:[{text:'Say only: OK'}]}], generationConfig:{maxOutputTokens:5} }) }
-    );
-    if (res.ok) {
-      msg.innerHTML = '<span style="color:var(--green)">✅ Key works! Click "Save &amp; Connect".</span>';
-    } else {
-      const d = await res.json().catch(()=>({}));
-      msg.innerHTML = `<span style="color:var(--accent)">❌ ${d?.error?.message || 'Invalid key — please check and retry.'}</span>`;
-    }
-  } catch(e) {
-    msg.innerHTML = '<span style="color:var(--accent)">Network error. Make sure this page is served over HTTPS (e.g. GitHub Pages), not opened as a local file.</span>';
-  }
-}
 
 // ─────────────────────────────────────────────
 // NAVIGATION
@@ -1311,102 +1011,21 @@ function nav(el, tabId) {
 }
 
 // ─────────────────────────────────────────────
-// GEMINI CALL — robust with model fallback
+// UI HELPERS  (no loading spinner needed — all instant)
 // ─────────────────────────────────────────────
-async function callGemini(prompt) {
-  const key = localStorage.getItem('sl_api_key');
-  if (!key) { openModal(); throw new Error('No API key — please connect your Gemini key first.'); }
-
-  const MODELS = [
-    'gemini-2.0-flash',
-    'gemini-2.0-flash-lite',
-    'gemini-1.5-flash',
-    'gemini-1.5-flash-8b',
-    'gemini-1.5-pro'
-  ];
-
-  let lastErr = '';
-  for (const model of MODELS) {
-    try {
-      const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ role:'user', parts:[{ text: prompt }] }],
-            generationConfig: { temperature:0.3, maxOutputTokens:1400, topK:40, topP:0.95 },
-            safetySettings: [
-              { category:'HARM_CATEGORY_HARASSMENT',        threshold:'BLOCK_NONE' },
-              { category:'HARM_CATEGORY_HATE_SPEECH',       threshold:'BLOCK_NONE' },
-              { category:'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold:'BLOCK_NONE' },
-              { category:'HARM_CATEGORY_DANGEROUS_CONTENT', threshold:'BLOCK_NONE' }
-            ]
-          })
-        }
-      );
-
-      if (res.status === 404) { lastErr = `Model ${model} not found`; continue; }
-
-      const data = await res.json().catch(() => ({}));
-
-      if (!res.ok) {
-        const msg = data?.error?.message || `HTTP ${res.status}`;
-        if (res.status === 401 || res.status === 403 || msg.toLowerCase().includes('api key')) {
-          throw new Error('❌ Invalid API key. Open Settings (top right) and re-enter your key from aistudio.google.com.');
-        }
-        if (res.status === 429 || msg.toLowerCase().includes('quota')) { lastErr = 'quota'; continue; }
-        lastErr = msg; continue;
-      }
-
-      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (text) return text;
-      lastErr = 'Empty response'; continue;
-
-    } catch(e) {
-      if (e.message.startsWith('❌')) throw e;
-      if (e.name === 'TypeError' || e.message.includes('Failed to fetch')) {
-        throw new Error('🌐 Network error — make sure you are online and the page is on GitHub Pages (HTTPS), not opened as a local file.');
-      }
-      lastErr = e.message; continue;
-    }
-  }
-
-  if (lastErr === 'quota') {
-    throw new Error('⏳ Daily free quota reached. Wait until tomorrow for the quota to reset, or create a new API key at aistudio.google.com and paste it in Settings.');
-  }
-  throw new Error('❌ Could not get a response. Check your API key in Settings and try again.\n\nDetail: ' + lastErr);
-}
-
-// ─────────────────────────────────────────────
-// UI HELPERS
-// ─────────────────────────────────────────────
-function setLoading(boxId) {
+function showBox(boxId, bodyId, html) {
   const box = document.getElementById(boxId);
   box.classList.add('show');
-  box.querySelector('.ai-box-body').innerHTML =
-    '<div class="loading-wrap"><div class="loader"></div><span>Checking playbook…</span></div>';
+  document.getElementById(bodyId).innerHTML = html;
 }
 
-function setResult(bodyId, text) {
-  const formatted = text
+function fmt(t) {
+  // Bold **text**, section headers, line breaks
+  return t
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/^### (.+)$/gm, '<strong style="color:var(--cyan)">$1</strong>')
-    .replace(/^## (.+)$/gm, '<strong style="color:var(--accent-bright);font-size:13px">$1</strong>')
-    .replace(/^# (.+)$/gm, '<strong style="color:var(--text);font-size:14px">$1</strong>');
-  document.getElementById(bodyId).innerHTML = formatted;
-}
-
-function setError(bodyId, msg) {
-  document.getElementById(bodyId).innerHTML =
-    `<span style="color:var(--accent)">${msg.replace(/\n/g,'<br>')}</span>`;
-}
-
-function setBtn(id, disabled, label) {
-  const b = document.getElementById(id);
-  if (!b) return;
-  b.disabled = disabled;
-  b.textContent = label;
+    .replace(/^### (.+)$/gm, '<span style="color:var(--cyan);font-weight:700">$1</span>')
+    .replace(/^## (.+)$/gm,  '<span style="color:var(--accent-bright);font-weight:700">$1</span>')
+    .replace(/^# (.+)$/gm,   '<span style="color:var(--text);font-weight:700;font-size:14px">$1</span>');
 }
 
 async function copyText(bodyId, btn) {
@@ -1417,6 +1036,674 @@ async function copyText(bodyId, btn) {
     setTimeout(() => btn.textContent = '📋 Copy to Clipboard', 2000);
   } catch { alert('Copy failed — please select and copy manually.'); }
 }
+
+// Stub — settings modal kept in HTML but no longer needed
+function openModal()  { document.getElementById('settingsModal').classList.add('open'); }
+function closeModal() { document.getElementById('settingsModal').classList.remove('open'); }
+function saveKey()    { closeModal(); }
+function testKey()    {
+  document.getElementById('testMsg').innerHTML =
+    '<span style="color:var(--green)">✅ No API key needed — playbook is fully built in!</span>';
+}
+function updateStatus() {
+  document.getElementById('statusDot').classList.add('on');
+  document.getElementById('statusText').textContent = 'Playbook Ready';
+}
+updateStatus();
+
+// ─────────────────────────────────────────────
+// HARDCODED SCRIPT LIBRARY
+// ─────────────────────────────────────────────
+const SCRIPTS = {
+  cold_call: (p,c) => `## 🧊 Cold Call — Barbara Script
+
+**Opening:**
+"I'm actually calling as a follow-up to a conversation you had with a colleague of mine named Barbara a few months ago. I know it's been a while but do you recall it by any chance — or would a short refresh help?
+
+I'll be very brief. SeaLights is a Quality Intelligence platform within Tricentis. It knows how to skip tests that are not related to code changes so ${p} and your team can execute only the critical, small subset of tests — to reduce your test cycle times and release much faster! It does that for every test type: UI, Regression, End to End... both Manual and Automated!
+
+So I was wondering — do you have any long E2E or regression testing cycles at the moment? Or any long CI cycles or gaps in your test suites?"
+
+---
+
+## 📞 CTA Options — Choose One:
+
+**CTA 1 — Reduce Test Cycles:**
+"The main intention of the call is to perhaps schedule a short demonstration of SeaLights with one of our engineers — to showcase how ${c}'s team will be able to optimize your long tests and prevent escaping defects. If you have time later this week, I'd be happy to schedule it."
+
+**CTA 2 — Quality Gates / Untested Code:**
+"...showcase how your team will be able to guarantee higher quality releases by flagging untested code changes and preventing them from reaching production using smart quality gates."
+
+**CTA 3 — Combo Pitch:**
+"...showcase how you'll be able to optimize manual and automated tests, but also prevent escaping defects."`,
+
+  short_advanced: (p,c) => `## ⚡ Short & Focused Pitch (Advanced)
+
+"SeaLights is a Quality Intelligence Platform within Tricentis. It helps teams save on the costs of testing while increasing their release speed — by executing only the relevant tests based on code changes for each build and release. It also shows gaps in test suites and flags untested code changes to prevent them from reaching production using smart quality gates.
+
+Our newest AI capabilities include **test generation based on code changes** — which is extraordinary.
+
+I was wondering — does ${c} have long CI cycles, or gaps in your test suites?"
+
+---
+
+## 📞 CTA:
+"The main intention of the call is to schedule a short demonstration with one of our engineers to show you exactly how it works. If you have time this week or next, I'd love to set that up."`,
+
+  wp_script: (p,c) => `## 📄 White Paper / Inbound Script
+
+**Opening:**
+"Hi ${p}, I'm calling since you've downloaded several white papers of ours recently. I was wondering — what prompted your interest, and are you familiar with SeaLights at all?"
+
+---
+
+## 🔁 Follow-Up Depending on Answer:
+
+**If they know SeaLights:**
+"That's great! I'd love to learn more about what specifically caught your attention and see if there's a way we can help ${c} more concretely. Do you have a few minutes to chat?"
+
+**If they don't know SeaLights:**
+"No problem at all — I'll give you a very brief overview. SeaLights is a Quality Intelligence platform within Tricentis. It helps teams run only the relevant tests based on code changes — so you cut down test cycle times dramatically, and also flag untested code before it hits production.
+
+Given your interest in our content, I'd love to schedule a quick 20-minute demo with one of our engineers. Would you have time this week?"
+
+---
+
+## 📞 CTA:
+"The main intention here is just to showcase the platform — I think you'd find it very relevant to what you're already looking into."`,
+
+  ai_feature: (p,c) => `## 🤖 AI Feature Script (Outbound)
+
+**Opening:**
+"Hi ${p}, I'm following up on a previous conversation you had with one of my team members a few months ago. Do you recall it by any chance — or would a short refresh help?
+
+Alright, I'll be very brief. SeaLights is a Quality Intelligence platform within Tricentis that **leverages AI to optimize test execution and prevent escaping defects**. It does that by generating missing test cases based on code changes — for the user stories they're related to.
+
+It also flags modified code that hasn't been tested, and skips tests that aren't related to code changes. It does that for **all test types** — E2E, Regression... both manual and automated.
+
+Most teams we speak with aren't leveraging AI within their testing efforts — they don't know which tests are missing and which tests they need to develop.
+
+So I was wondering — does ${c}'s team struggle with long CI cycles, or escaping defects in production?"
+
+---
+
+## 📞 CTA:
+"The main intention of the call is to schedule a short demo with one of our product experts who can walk you through exactly how the AI test generation and code change coverage works. If you have time this week, I'd be happy to set that up."`,
+
+  zoom_qual: (p,c) => `## 🎥 Zoom Qualification Call Script
+
+**Intro:**
+"Hi ${p}, thanks for joining — how are you? My name is [Your Name], and I'm in charge of business development for Tricentis SeaLights. I reached out after researching ${c} to identify if we could help solve a few challenges. I came across your profile and believe there's a good chance our platform could benefit your group.
+
+My goal today is to elaborate on SeaLights' capabilities and see if we could fit into your workflows — and then schedule a more technical, in-depth overview with my senior director. Did you get a chance to watch the video attached to the invite?"
+
+---
+
+## 🔍 Pain Discovery:
+"Normally, we identify 2 critical areas where executives like yourself find SeaLights relevant:
+
+**1. Slow Releases** — Teams find it difficult to understand which tests are most critical to the upcoming release, making them run all tests all the time. This creates a 'snowball' effect — long E2E or regression cycles, delayed time-to-market, and real inefficiencies.
+
+**2. Escaping Defects** — Most software teams aren't able to identify areas of code that haven't been tested — specifically newly added or modified code. This creates gaps, leading to untested code reaching production and causing defects.
+
+**Out of these two — which one resonates with you the most?"**
+
+---
+
+## 📋 Info to Gather:
+- Programming languages used
+- Team size and structure (separate QA team or engineers doing QA?)
+- Type of app (customer-facing / internal)
+- Release frequency
+- Manual vs automated testing
+- Regulations / proof of testing requirements
+
+---
+
+## 📞 Closing CTA:
+"Based on our call today, it seems like SeaLights could definitely be of help. I'd love to schedule a demo with my senior director to walk through the architecture and share a few customer success stories. When would you have time this week or next?"`,
+
+  demo_handoff: (p,c) => `## 🤝 Demo Handoff to AE
+
+**Opening (BDR speaks):**
+"Hi ${p}, thank you so much for joining — how are you? Let me do a quick round of introductions.
+
+My name is [Your Name] and I work closely with [AE Name], who'll be leading the conversation on SeaLights today. [AE Name] has been with us for quite some time and has worked with many customers similar to ${c}.
+
+${p}, when we spoke on the phone, you mentioned your primary interests were:
+
+1. **Optimizing test execution** — as your team currently runs all tests all the time
+2. **Preventing escaping defects** — by gaining visibility into modified code that hasn't been tested
+3. **Reducing the cost of testing** — by allocating resources more efficiently
+
+You also confirmed your team primarily develops in [programming language] in-house — is that still correct?
+
+Great — thanks again for your time, ${p}! I'll hand it off to [AE Name] from here. Enjoy the session!"
+
+---
+
+## 📝 Handoff Notes for AE:
+- Confirm programming language before the call
+- Primary pain: [fill in from qualification]
+- Make sure the lead knows what's being covered in the demo`,
+
+  dev_magic: (p,c) => `## 💻 Magic Paragraph — Dev / Engineering Persona
+
+**Discovery question first:**
+"Just out of curiosity — do you run **ALL** of your tests ALL the time?"
+
+*(If yes → "How long does it usually take to run a full suite of E2E or regression tests?")*
+
+---
+
+**The Pitch:**
+"I'd just like to note that SeaLights isn't a test automation or framework tool — but rather **a layer of AI that sits on top of your CI/CD** that knows how to correlate code changes to specific tests, and then automatically prioritizes your test strategy accordingly.
+
+So when your team needs quick feedback during a hotfix — they'd run only the critical subset related to those changes. You optimize speed on one hand, and prevent escaping defects on the other.
+
+If this topic interests you, or you think it would be useful for your department or team — the main intention of the call is to perhaps schedule a short demonstration to show you how it works. I think you'd be genuinely impressed by it."
+
+---
+
+## 📞 CTA:
+"Would you have some time later this week? I'd love to set up a 20-minute session with one of our engineers."`,
+
+  qa_magic: (_p,_c) => `## 🔍 Magic Paragraph — QA / QE Persona
+
+**The Pitch:**
+"SeaLights isn't a test framework or automation tool — but rather **a layer of AI that sits on top of your CI/CD**, showing you where you have testing gaps, quality risks like untested code changes, and preventing them from reaching production.
+
+It covers **ALL test stages** — not just unit tests — and recommends which subset of tests needs to be executed in every run, so your team isn't wasting time running tests that aren't relevant to recent changes.
+
+It also identifies modified code that hasn't been tested yet — so you can block it before it hits production."
+
+---
+
+## 📞 CTA:
+"If this sounds relevant to the challenges your QA team is dealing with — the main intention of the call is to schedule a short demo with one of our product experts. Would you have some time this week or next?"`,
+};
+
+// ─────────────────────────────────────────────
+// HARDCODED OBJECTION RESPONSES
+// ─────────────────────────────────────────────
+const OBJECTIONS = {
+  send_email: `## 📧 "Send me an email"
+
+**What to say:**
+"I can absolutely send you all the information over email — but from my experience, most of my emails tend to go to spam, so what I find most efficient is to set a tentative slot on the calendar and include everything there. That way you'll have the material to review, and we'll have a placeholder so it doesn't fall through the cracks — I'm sure you're very busy.
+
+If you have some time next week that's generally open, I'll fire over an invite quickly."
+
+---
+
+**Why this works:** You're not pushing back on the email request — you're reframing the calendar slot as a service to them, not a commitment.
+
+**Follow-up if they still insist on email only:**
+Go ahead and send the cold call follow-up email, then call back 2 days later referencing the email.`,
+
+  inhouse_solution: `## 🏠 "We have an inhouse solution"
+
+**What to say:**
+"Excellent — it's great to hear your team already acknowledges the challenges we help solve. I will say, we do have customers who tried to build this in-house themselves, and they just couldn't reach the level of accuracy and efficiency they needed.
+
+There is no other tool that knows how to do **code-to-test mapping for ALL test types** — flagging untested modified code AND skipping tests that aren't related to code changes. That combination is genuinely unique.
+
+Would you be open to a short demo just to see the comparison? I think you'd find it eye-opening."
+
+---
+
+**CTA:** "If you have time this week, I'd love to schedule a 20-minute session — no commitment, just a look."`,
+
+  already_tool: `## 🔧 "We already have a tool"
+
+**What to say:**
+"That's great to hear! SeaLights was actually built to complement existing tools — it integrates natively with Tosca, qTest, Jenkins, GitHub, Azure DevOps, and more.
+
+In fact, many of our existing Tricentis customers already have SeaLights running alongside their current stack — using it to extend visibility directly into their CI/CD pipelines and code changes, beyond what their other tools can see.
+
+The key differentiator is **code-to-test mapping across ALL test types** — something most tools don't do at all."
+
+---
+
+**Follow-up question:** "What tool are you currently using for test management or coverage?" *(Use their answer to position SeaLights as complementary, not a replacement.)*
+
+**CTA:** "Would you be open to a quick 20-minute session just to see how SeaLights would sit alongside what you already have?"`,
+
+  no_budget: `## 💸 "We don't have budget"
+
+**What to say:**
+"Thanks for being upfront about that — and I'm glad you find the platform interesting. To be honest, our sales cycles typically run about 3 quarters, so we're not targeting this quarter's budget or even next quarter's. 
+
+The main intention here is simply to showcase the platform, see if it fits into your tech initiatives, and establish a point of contact with my senior director for future reference. No commitment needed right now.
+
+If you have some time later this week, I'd be happy to set that up — it's just a 20-minute look."
+
+---
+
+**Why this works:** You remove all budget pressure by reframing it as a future-planning conversation, not a sales close.`,
+
+  not_dm: `## 👤 "I'm not a decision maker"
+
+**What to say:**
+"That's completely fine — we're not looking for decision makers at this stage. We're primarily looking for the people who are actually dealing with the problems we solve, to see if there's any relevance to your day-to-day work.
+
+In the demo, we cover the challenges we help solve, the architecture behind it, and the platform itself. I genuinely think you'd find it interesting.
+
+If this topic resonates with you — or you think it would be useful for your team — the main intention is just to schedule a short demonstration to show you how it works."
+
+---
+
+**CTA:** "Would you have 20 minutes this week or next?"`,
+
+  not_relevant: `## 🚫 "Not relevant / not our focus"
+
+**What to say:**
+"I hear you — but the interesting thing is that SeaLights goes well beyond standard code coverage visibility. It's really about **engineering efficiency and release confidence**.
+
+For example, SeaLights automatically detects new or changed code that hasn't been tested yet, and uses AI to generate the missing tests based on those changes — helping your teams close gaps and move faster. Ultimately it reduces wasted time, improves developer productivity, and helps you release with less risk.
+
+Even if testing isn't your primary focus, the CI/CD efficiency angle tends to resonate with most engineering leaders."
+
+---
+
+**CTA:** "Would you be open to a 20-minute session just to take a look? I think the efficiency story might be more relevant than it sounds."`,
+
+  how_does_it_work: `## ❓ "How does it work?"
+
+**What to say:**
+"Great question — to be honest, the main intention of this call is to connect you with one of our product experts who can give you a proper technical walkthrough. I don't want to oversimplify it or mislead you with a surface-level answer.
+
+In the demo, they'll cover exactly how it works — the architecture, the integrations, how it plugs into your CI/CD — and walk through some real customer examples. I think you'd genuinely be impressed by it."
+
+---
+
+**CTA:** "If you have time this week, I'd love to set that up — it's only 20 minutes and you'll get a much better answer than I can give you over the phone."
+
+---
+
+**Quick summary if they push for more before agreeing:**
+SeaLights sits as a layer on top of your CI/CD. It instruments your code and your tests, then maps which tests cover which code. When code changes, it knows exactly which tests are relevant — and which ones to skip. It also flags code changes that have zero test coverage, and can auto-generate tests for those gaps using AI.`,
+
+  not_qa: `## 🤷 "I don't handle QA"
+
+**What to say:**
+"That's completely fine — SeaLights isn't aimed just at QA teams. It integrates with Jira and Azure DevOps to provide **modified code coverage at the User Story level**.
+
+For every user story, you can see exactly which tests cover it — and which code changes within that story haven't been tested. That's useful for **any engineering leader**, not just QA.
+
+It also shows code coverage per build, per sprint, per release — so you always know where your quality risks are."
+
+---
+
+**Follow-up question:** "Who on your team would typically own this kind of testing visibility — is there a QE lead or engineering manager I should be speaking with?"
+
+**CTA:** "Either way, would you be open to a quick demo? I think the User Story coverage piece would be relevant to your world."`,
+
+  tricentis_existing: `## 🔗 "We already use Tricentis / another automation platform"
+
+**What to say:**
+"That's great to hear! SeaLights was built to complement exactly that. It integrates natively with **Tosca, qTest, Jenkins, GitHub, Azure DevOps**, and more.
+
+In fact, many of our existing Tricentis customers already have SeaLights running alongside their Tosca setup — using it to extend visibility beyond test automation, directly into their CI/CD pipelines and code changes. It tells you which tests are actually relevant to each build, and which code hasn't been tested at all."
+
+---
+
+**CTA:** "Would you be open to a 20-minute session just to see how it layers on top of what you already have? I think it would complement your current setup nicely."`,
+
+  clevel_exec: `## 👔 High-Level Exec / C-Level
+
+**What to say:**
+"I completely understand that attending demos isn't typically part of your responsibilities. From my experience though, executives like yourself often find SeaLights compelling because it's a **strategic platform** designed for large organizations like ${'{Company}'} to shift-left and fundamentally change their testing practices.
+
+Specifically, it gives leadership:
+1. **Visibility into untested code changes** — so nothing unvetted reaches production
+2. **Efficient resource allocation** — focusing test execution on what actually matters and eliminating wasted cycles
+
+What I'm proposing is a brief session to share customer success stories and walk through how this works at an executive level — through whatever channels you prefer."
+
+---
+
+**CTA:** "Would 20 minutes work, or would it be better for me to connect with someone on your team first and loop you in at the right stage?"`,
+
+  not_right_person: `## ↩️ "I'm not the right person"
+
+**What to say:**
+"Of course — just to make sure I'm not completely off-track here: are you more on the engineering side, or is testing and release visibility handled by someone else on your team?"
+
+*(Listen to their answer and respond accordingly:)*
+
+**If they say "I'm more dev-focused":**
+"I just want to point out that SeaLights isn't just a QA tool — it's really about improving CI/CD efficiency and giving dev teams faster feedback on whether their code is properly covered or introducing new risks. A lot of engineering leads use it to optimize test cycles and spot quality risks early."
+
+**If they point to someone else:**
+"That's really helpful — would you be comfortable making a quick introduction, or sharing their name so I can reach out directly?"
+
+---
+
+**CTA:** "Either way, would you be open to a 20-minute session so you can see it for yourself and decide if it's worth passing on internally?"`,
+
+  sonarqube: `## ⚙️ "We use SonarQube / we already have coverage"
+
+**What to say:**
+"Actually, SonarQube is quite different from SeaLights — and most of our customers actually use both. While Sonar provides partial coverage at the **Unit Test level only**, SeaLights provides coverage across **all test types** — E2E, Regression, Integration — whether they're manual or automated.
+
+But more importantly, SeaLights goes well beyond coverage reporting:
+- It **skips irrelevant tests** that aren't related to recent code changes
+- It **flags modified code** that has zero test coverage across any test type
+- It **generates missing tests** using AI based on your actual code changes
+
+So Sonar tells you what's covered in unit tests. SeaLights tells you what's at risk across your entire test suite — and helps you fix it."
+
+---
+
+**CTA:** "Would you be open to a quick 20-minute demo just to see the comparison side by side? I think you'd find the difference pretty striking."`,
+};
+
+// ─────────────────────────────────────────────
+// HARDCODED EMAIL TEMPLATES
+// ─────────────────────────────────────────────
+const EMAILS = {
+  cold_call_followup: (n,c,pain) => `**Subject:** Reduce testing cycle time without compromising quality
+
+Hi ${n},
+
+It was a pleasure speaking with you today — I hope we reconnect soon.
+
+Tricentis SeaLights is a next-generation Quality Intelligence platform designed for enterprise quality engineering teams. It empowers Dev and QA teams to accelerate testing cycles and increase quality.${pain ? `\n\nBased on our conversation, I believe SeaLights could specifically help ${c} with: **${pain}**.` : ''}
+
+**SeaLights capabilities:**
+• **Test Impact Analytics** — Auto-select and execute only the critical tests related to code changes, for every test type and stage
+• **Test Gap Analytics** — Block untested code changes from reaching production
+• **AI Test Generation** — Automatically generate tests for untested code changes, based on each user story
+• **Advanced Code Coverage** — Comprehensive coverage visibility across every test type
+
+5-minute overview: https://tricentis-video.wistia.com/medias/xkidbjli0a
+
+I'd appreciate the opportunity to showcase our solution in a short demonstration with one of my executives.
+
+Best,
+[Your Name]`,
+
+  no_response: (n,_c,_pain) => `**Subject:** Re: SeaLights — quick follow-up
+
+Hi ${n},
+
+Did you get a chance to review my previous email? I really hope we could connect this week — even just for 20 minutes.
+
+Best,
+[Your Name]`,
+
+  invite: (n,c,_pain) => `**Subject:** ${c} <> SeaLights | Introduction
+
+Hi ${n},
+
+To follow up on our previous conversation — I've set a tentative slot for us to showcase SeaLights for your quality initiatives and how you can leverage AI within your processes. I hope this time works for you!
+
+Watch a 5-minute overview of Tricentis SeaLights: https://tricentis-video.wistia.com/medias/xkidbjli0a
+
+**In this session, we'll cover how SeaLights can help ${c} with:**
+• Generate missing tests with AI
+• Reduce long & expensive testing cycles (up to 90% reduction in release cycle time)
+• Minimize production defects
+• Focus your organizational quality strategy
+
+Looking forward to it!
+
+Best,
+[Your Name]`,
+
+  meeting_declined: (n,_c,_pain) => `**Subject:** Re: SeaLights Demo — New Time?
+
+Hi ${n},
+
+Thanks for letting me know — no problem at all. Would [suggest a new date/time] work better for you?
+
+Happy to be flexible — just let me know what works on your end.
+
+Best,
+[Your Name]`,
+
+  meeting_accepted: (n,_c,_pain) => `**Subject:** Looking forward to our session!
+
+Hi ${n},
+
+Thanks for accepting — really looking forward to it!
+
+To help tailor the session to your team's needs, could you share the **primary programming languages** your team uses to develop your in-house applications? (e.g. Java, C++, Python, C#)
+
+Thanks in advance!
+
+Best,
+[Your Name]`,
+
+  assistant_fwd: (n,c,_pain) => `**Subject:** Introduction to Tricentis SeaLights — For ${n}
+
+Hi,
+
+I hope you're well. I reached out to ${n} at ${c} regarding Tricentis SeaLights — a Quality Intelligence platform that helps engineering and QA teams reduce test cycle times and prevent escaping defects.
+
+I'd be grateful if you could forward this email to ${n}, or let me know the best way to connect with them.
+
+5-minute overview: https://tricentis-video.wistia.com/medias/xkidbjli0a
+
+Thank you so much for your help!
+
+Best,
+[Your Name]`,
+};
+
+// ─────────────────────────────────────────────
+// HARDCODED NEXT STEPS
+// ─────────────────────────────────────────────
+const NEXT_STEPS = {
+  connected_interested: (p) => `## 🟢 Connected — Interested
+
+**Immediate actions for ${p}:**
+
+**1. Log the dispo in SalesLoft:**
+→ Use **SeaLights FUI** (Follow-up Interested)
+
+**2. Send the follow-up email right now:**
+→ Subject: "Reduce testing cycle time without compromising quality"
+→ Include the 5-minute overview video link
+→ Suggest a demo slot in the email body
+
+**3. Send a LinkedIn connection request (if not already connected):**
+→ "Hi ${p}, in light of your experience in software engineering, I'd like to connect."
+
+**4. Set a follow-up task:**
+→ If no reply in 2 days → call again and reference the email
+
+**5. Slack (if inbound lead):**
+→ React with ❤️ (Qualified)
+
+---
+
+**Key principle:** Speed is everything. They're engaged now — send the email before you do anything else.`,
+
+  demo_scheduled: (p) => `## 📅 Demo Scheduled — ${p}
+
+**Immediate actions:**
+
+**1. Log the dispo in SalesLoft:**
+→ Use **SeaLights DS** (Demo Scheduled)
+
+**2. Send the meeting accepted email:**
+→ "Thanks for accepting my invite ${p}, looking forward! To tailor the session, could you share the primary programming languages your team uses?"
+
+**3. Wait 1 hour, then call to qualify:**
+Must confirm BEFORE the meeting:
+- ✅ Programming language (is it supported?)
+- ✅ Valid pain (escaping defects / long CI cycles)
+- ✅ ICP title (Director+)
+- ✅ Supported tech stack
+
+**4. Slack (if inbound):**
+→ React with ✅ (Booked)
+
+**5. Calendar:**
+→ Mark the invite as Accepted / change color to green in your calendar
+
+---
+
+**Remember:** We must qualify PRIOR to the meeting. Don't let an unqualified lead through to an AE demo.`,
+
+  followup_hangup: (p) => `## 📞 Follow-Up (Hang-up) — ${p}
+
+**Immediate actions:**
+
+**1. Log the dispo in SalesLoft:**
+→ Use **SeaLights FUHU** (Follow-up — Hang-up)
+
+**2. Keep them in the cadence:**
+→ Continue calling on the next scheduled cadence step
+→ Try different times of day (early morning, end of day)
+
+**3. Try LinkedIn:**
+→ Send a connection request + first message after connecting
+
+**4. Don't give up:**
+→ Per the playbook: "We don't give up on leads — keep calling, keep following up until we book."
+
+---
+
+**What NOT to do:** Do not send the full follow-up email yet — they didn't hear the pitch, so the email will have no context for them.`,
+
+  not_interested: (p) => `## 🔴 Not Interested — ${p}
+
+**Immediate actions:**
+
+**1. Log the dispo in SalesLoft:**
+→ Use **SeaLights NIN** (Not Interested Now)
+
+**2. Ask one more question before accepting the objection:**
+→ "Totally understand — just out of curiosity, is it that testing isn't a priority right now, or that you already have a solution in place?"
+→ *(Their answer may open a door to re-engage or identify the real objection)*
+
+**3. If truly not interested:**
+→ Remove from active cadence
+→ Add a note in CRM with reason and date
+
+**4. Slack (if inbound):**
+→ React with ❌ and note: "NIN — [brief reason]"
+
+---
+
+**Note:** "Not interested now" is not the same as "not interested ever." Log the reason clearly so you or a future BDR can revisit in 2–3 quarters.`,
+
+  no_answer: (p) => `## 📵 No Answer — ${p}
+
+**Immediate actions:**
+
+**1. Do NOT log a dispo** — no answer = no connection, cadence continues automatically
+
+**2. Leave a voicemail (if applicable):**
+→ Keep it under 20 seconds
+→ "Hi ${p}, this is [Your Name] from Tricentis SeaLights — I'm calling regarding your team's testing processes. I'll try you again soon, but feel free to reach me at [number]. Have a great day!"
+
+**3. Try at a different time:**
+→ If you called in the morning → try late afternoon (4–5pm their time)
+→ If you called on a Monday → try mid-week
+
+**4. Send a LinkedIn message** if you're connected
+
+**5. Continue the cadence as normal**`,
+
+  meeting_declined: (p) => `## ❌ Meeting Declined — ${p}
+
+**Immediate actions (respond ASAP):**
+
+**1. Move the meeting 2 business days forward**
+
+**2. Send this message immediately:**
+→ "Thanks for letting me know ${p}. Would [New Date/Time] work better for you?"
+
+**3. Wait for response**
+
+**4. If positive:**
+→ Qualify the lead
+→ Remove "Suggested" from the invite title
+→ Change calendar color to green
+
+**5. If no response after 2 days:**
+→ Check WhatsApp — is ${p} reachable?
+→ If reachable → ask Adi to send a message
+→ If not reachable → let Adi know
+
+---
+
+**Key principle:** Speed is everything — respond the moment you see the decline.`,
+
+  meeting_tentative: (p) => `## ❓ Meeting Tentative — ${p}
+
+**Immediate actions (respond ASAP):**
+
+**1. Move the meeting 2 hours forward**
+
+**2. Send this message immediately:**
+→ "Hi ${p}, I saw you tentatively accepted — does this time work better for you?"
+
+**3. Try to reach by phone**
+
+**4. If positive:**
+→ Qualify the lead
+→ Change calendar color to green
+
+**5. If no answer:**
+→ Check WhatsApp
+→ Follow up again the next day
+
+---
+
+**Key principle:** Tentative = they're considering it. Strike while it's hot — call immediately.`,
+
+  meeting_proposed_new_time: (p) => `## 🔄 Proposed New Time — ${p}
+
+**Immediate actions (respond ASAP):**
+
+**1. Accept the new time right away**
+
+**2. Send this message immediately:**
+→ "Hi ${p}, this time works perfectly — I just sent an updated invite. Did it come through?"
+
+**3. Try to reach by phone to confirm**
+
+**4. Once confirmed:**
+→ Qualify the lead (programming language, pain, ICP title)
+→ Change calendar color to green
+→ Log as Demo Scheduled in SalesLoft: **SeaLights DS**
+
+---
+
+**Key principle:** They proposed a time = they want to meet. Lock it in immediately before they change their mind.`,
+
+  meeting_accepted: (p) => `## ✅ Meeting Accepted — ${p}
+
+**Immediate actions:**
+
+**1. Check who confirmed:**
+→ Was it ${p} directly, or their assistant?
+
+**2. If ${p} confirmed directly — send this now:**
+→ "Thanks for accepting my invite ${p}, looking forward! Also, to tailor the session to your needs — could you share the primary programming languages your team uses to develop your in-house applications? (e.g. Java, C++, Python)"
+
+**3. Wait 1 hour, then call to qualify:**
+Confirm BEFORE the meeting:
+- ✅ Supported programming language
+- ✅ Valid pain (escaping defects / long CI cycles / costs)
+- ✅ ICP title (Director and above)
+- ✅ Inhouse development (not outsourced)
+
+**4. Log in SalesLoft:**
+→ **SeaLights DS** (Demo Scheduled)
+
+**5. Slack (if inbound):**
+→ React with ✅ (Booked)
+
+---
+
+**Remember:** Must qualify PRIOR to the meeting. No exceptions.`,
+};
 
 // ─────────────────────────────────────────────
 // CALL SCRIPTS
@@ -1429,44 +1716,13 @@ function pickScript(el, type) {
   document.getElementById('scriptBox').classList.remove('show');
 }
 
-async function runScript() {
+function runScript() {
   if (!activeScript) { alert('Please select a script first.'); return; }
   const prospect = document.getElementById('sProspect').value.trim() || '[Prospect Name]';
   const company  = document.getElementById('sCompany').value.trim()  || '[Company]';
-  const persona  = document.getElementById('sPersona').value         || 'not specified';
-
-  const names = {
-    cold_call:'Barbara cold call script', short_advanced:'Short & focused advanced pitch',
-    wp_script:'White paper/inbound script', ai_feature:'AI feature outbound script',
-    zoom_qual:'Zoom qualification call script', demo_handoff:'Demo handoff to AE script',
-    dev_magic:'Magic paragraph — Dev/Engineering persona', qa_magic:'Magic paragraph — QA/QE persona'
-  };
-
-  setLoading('scriptBox');
-  setBtn('scriptBtn', true, '⏳ Loading…');
-
-  const prompt = `You are the SeaLights BDR Coach. Use ONLY the playbook knowledge below. Never add information not in the playbook.
-
-PLAYBOOK:
-${PLAYBOOK}
-
-TASK: Provide the complete "${names[activeScript]}" script.
-Prospect Name: ${prospect}
-Company: ${company}
-Persona: ${persona}
-
-Replace placeholders like [Prospect Name], [Company], [BDR Name] with the provided details.
-Format clearly with sections. Include all CTAs and variations from the playbook.
-If a persona is specified, add a brief note at the end about any persona-specific adjustments.`;
-
-  try {
-    const text = await callGemini(prompt);
-    setResult('scriptOut', text);
-  } catch(e) {
-    setError('scriptOut', e.message);
-  } finally {
-    setBtn('scriptBtn', false, '🎯 Get Script');
-  }
+  const fn = SCRIPTS[activeScript];
+  const raw = fn ? fn(prospect, company) : 'Script not found.';
+  showBox('scriptBox', 'scriptOut', fmt(raw));
 }
 
 // ─────────────────────────────────────────────
@@ -1491,111 +1747,56 @@ function pickObj(el, type) {
   document.querySelectorAll('.pill').forEach(p => p.classList.remove('selected'));
   el.classList.add('selected');
   document.getElementById('objInput').value = OBJ_LABELS[type] || '';
-  runObj();
+  // Show instantly
+  const raw = OBJECTIONS[type] || 'This specific scenario isn\'t covered in our playbook — please check with your manager.';
+  showBox('objBox', 'objOut', fmt(raw));
 }
 
-async function runObj() {
+function runObj() {
   const objText = document.getElementById('objInput').value.trim();
   if (!objText) { alert('Please select or type an objection.'); return; }
-
-  setLoading('objBox');
-  setBtn('objBtn', true, '⏳ Loading…');
-
-  const prompt = `You are the SeaLights BDR Coach. Use ONLY the playbook knowledge below. If the answer is not in the playbook, say: "This specific scenario isn't covered in our playbook — please check with your manager."
-
-PLAYBOOK:
-${PLAYBOOK}
-
-TASK: The prospect just said: "${objText}"
-Provide the exact playbook response to this objection. Include:
-1. The exact script/response to use verbatim
-2. Any follow-up questions to ask
-3. The CTA to use at the end
-
-Format clearly. Be direct and practical.`;
-
-  try {
-    const text = await callGemini(prompt);
-    setResult('objOut', text);
-  } catch(e) {
-    setError('objOut', e.message);
-  } finally {
-    setBtn('objBtn', false, '🛡️ Get Playbook Response');
-  }
+  // Try to match typed text to a known key
+  const match = Object.entries(OBJ_LABELS).find(([,v]) =>
+    v.toLowerCase() === objText.toLowerCase()
+  );
+  const raw = match
+    ? (OBJECTIONS[match[0]] || 'Not in playbook — check with your manager.')
+    : `## Custom Objection\n\nYou typed: "${objText}"\n\n**Suggested approach:**\nAcknowledge their concern, then bridge back to the two core pains SeaLights solves:\n1. **Long CI cycles / slow releases** — "Does your team run all tests all the time? How long does a full E2E run take?"\n2. **Escaping defects** — "Do you ever have untested code reaching production?"\n\nThen CTA: "The main intention of the call is to schedule a short demo — would you have 20 minutes this week?"`;
+  showBox('objBox', 'objOut', fmt(raw));
 }
 
 // ─────────────────────────────────────────────
 // EMAIL DRAFTER
 // ─────────────────────────────────────────────
-async function runEmail() {
+function runEmail() {
   const name    = document.getElementById('eName').value.trim()    || '[First Name]';
   const company = document.getElementById('eCompany').value.trim() || '[Company]';
-  const title   = document.getElementById('eTitle').value.trim()   || 'not provided';
   const eType   = document.getElementById('eType').value;
-  const notes   = document.getElementById('eNotes').value.trim()   || 'not provided';
-  const li      = document.getElementById('eLinkedin').value.trim()|| 'not provided';
-  const pain    = document.getElementById('ePain').value           || 'not specified';
-
-  const typeLabels = {
-    cold_call_followup: 'Cold Call Follow-Up (prospect asked for more info)',
-    no_response:        'No Response Follow-Up (they have not replied)',
-    invite:             'Demo Invite / Suggested Meeting Slot',
-    meeting_declined:   'Meeting Declined — Reschedule',
-    meeting_accepted:   'Meeting Accepted — Confirmation with qualification ask',
-    assistant_fwd:      'Via Assistant — message to forward to the lead'
-  };
-
-  setLoading('emailBox');
-  setBtn('emailBtn', true, '⏳ Drafting…');
-
-  const prompt = `You are the SeaLights BDR Coach. Use ONLY the email templates and playbook knowledge below. Do not invent statistics or claims not in the playbook.
-
-PLAYBOOK:
-${PLAYBOOK}
-
-TASK: Draft a "${typeLabels[eType]}" email.
-Prospect Name: ${name}
-Company: ${company}
-Title: ${title}
-Call Notes: ${notes}
-LinkedIn Info: ${li}
-Primary Pain: ${pain}
-
-Instructions:
-1. Use the email template from the playbook as the base structure
-2. Personalize using call notes and LinkedIn info
-3. Keep it aligned with playbook tone: professional, brief, non-pushy
-4. Include the subject line at the top
-5. Do not use statistics or claims not in the playbook
-6. End with the appropriate CTA from the playbook
-
-Format: Subject line first, then the email body.`;
-
-  try {
-    const text = await callGemini(prompt);
-    setResult('emailOut', text);
-    document.getElementById('emailBox').classList.add('show');
-  } catch(e) {
-    setError('emailOut', e.message);
-    document.getElementById('emailBox').classList.add('show');
-  } finally {
-    setBtn('emailBtn', false, '✉️ Draft Email');
+  const pain    = document.getElementById('ePain').value           || '';
+  const notes   = document.getElementById('eNotes').value.trim();
+  const fn = EMAILS[eType];
+  let raw = fn ? fn(name, company, pain) : 'Template not found.';
+  // Append call notes as a postscript if provided
+  if (notes) {
+    raw += `\n\n---\n**Call Notes Reference (personalise above with this):**\n${notes}`;
   }
+  document.getElementById('emailBox').classList.add('show');
+  showBox('emailBox', 'emailOut', fmt(raw));
 }
 
 // ─────────────────────────────────────────────
 // NEXT STEPS
 // ─────────────────────────────────────────────
 const OUTCOME_LABELS = {
-  connected_interested:        "Connected with prospect — heard the pitch and is interested but no meeting set yet",
-  demo_scheduled:              "Demo / Meeting was scheduled",
-  followup_hangup:             "Connected but they hung up or didn't hear the full pitch — need to follow up",
-  not_interested:              "Prospect said they are not interested",
-  no_answer:                   "No answer on the call",
-  meeting_declined:            "Meeting invite was declined",
-  meeting_tentative:           "Meeting was marked as tentative",
-  meeting_proposed_new_time:   "Prospect proposed a new meeting time",
-  meeting_accepted:            "Meeting was accepted / confirmed"
+  connected_interested:        "Connected — Interested",
+  demo_scheduled:              "Demo Scheduled",
+  followup_hangup:             "Follow-up (Hang-up)",
+  not_interested:              "Not Interested",
+  no_answer:                   "No Answer",
+  meeting_declined:            "Meeting Declined",
+  meeting_tentative:           "Meeting Tentative",
+  meeting_proposed_new_time:   "Proposed New Time",
+  meeting_accepted:            "Meeting Accepted"
 };
 
 function pickOutcome(el, type) {
@@ -1606,77 +1807,95 @@ function pickOutcome(el, type) {
   document.getElementById('nsBox').classList.remove('show');
 }
 
-async function runNextSteps() {
+function runNextSteps() {
   if (!activeOutcome) { alert('Please select a call outcome.'); return; }
-  const prospect = document.getElementById('nsName').value.trim()  || '[Prospect]';
-  const notes    = document.getElementById('nsNotes').value.trim() || 'none';
-
-  setLoading('nsBox');
-  setBtn('nsBtn', true, '⏳ Loading…');
-
-  const prompt = `You are the SeaLights BDR Coach. Use ONLY the playbook knowledge below. Do not add any steps not in the playbook.
-
-PLAYBOOK:
-${PLAYBOOK}
-
-TASK: The BDR just had a call with ${prospect}.
-Outcome: ${OUTCOME_LABELS[activeOutcome]}
-Additional notes: ${notes}
-
-Provide the exact next steps according to the playbook. Include:
-1. Immediate actions (what to do right now)
-2. What dispo/cadence to log in SalesLoft
-3. Any messages to send (exact wording from playbook)
-4. Any follow-up timing rules
-5. What emoji to use in the Slack channel (if inbound)
-
-Be specific and actionable. Reference exact playbook language.`;
-
-  try {
-    const text = await callGemini(prompt);
-    setResult('nsOut', text);
-  } catch(e) {
-    setError('nsOut', e.message);
-  } finally {
-    setBtn('nsBtn', false, '📋 Get Next Steps');
-  }
+  const prospect = document.getElementById('nsName').value.trim() || '[Prospect]';
+  const fn = NEXT_STEPS[activeOutcome];
+  const raw = fn ? fn(prospect) : 'Steps not found.';
+  showBox('nsBox', 'nsOut', fmt(raw));
 }
 
 // ─────────────────────────────────────────────
-// QUALIFICATION
+// QUALIFICATION — keyword-based instant analysis
 // ─────────────────────────────────────────────
-async function runQualify() {
+function runQualify() {
   const input = document.getElementById('qualInput').value.trim();
   if (!input) { alert('Please describe the lead first.'); return; }
 
-  setLoading('qualBox');
-  setBtn('qualBtn', true, '⏳ Analyzing…');
+  const t = input.toLowerCase();
 
-  const prompt = `You are the SeaLights BDR Coach. Use ONLY the ICP qualification criteria from the playbook below.
+  // Red flags
+  const flags = [];
+  const passes = [];
 
-PLAYBOOK:
-${PLAYBOOK}
+  // Territory
+  if (/india|iran|latam|brazil|argentina|apac|china|japan|singapore|emea|middle east|dubai|israel(?! tech)|saudi/.test(t))
+    flags.push('❌ **Territory** — Appears to be in an excluded territory (India, Iran, LATAM, APAC, EMEA, Middle East)');
+  else
+    passes.push('✅ **Territory** — No excluded territory detected');
 
-TASK: Based on the playbook's ICP qualification criteria, assess whether this lead should be booked:
-"${input}"
+  // Tech stack
+  const supported = /java|javascript|angular|react|typescript|nodejs|node\.js|scala|python|c#|\.net|golang|go |c\+\+|gcc/.test(t);
+  const unsupported = /mobile|ios|android|salesforce|ruby|oracle|php|linux/.test(t);
+  if (unsupported) flags.push('❌ **Tech Stack** — Mentions unsupported technology (mobile/iOS/Android/Salesforce/Ruby/Oracle/PHP/Linux)');
+  else if (supported) passes.push('✅ **Tech Stack** — Supported language detected');
+  else passes.push('⚠️ **Tech Stack** — Language not mentioned — ask: "What primary languages do you develop in?"');
 
-Provide:
-1. ✅ BOOK or ❌ DON'T BOOK — with clear reasoning
-2. Check each qualification criterion from the playbook (go through the full checklist)
-3. Any red flags to watch out for
-4. What qualification questions to still ask if anything is unclear
-5. Suggested dispo code from the playbook if not booking
+  // Persona / level
+  if (/\b(manager|engineer|developer|dev|junior|intern|analyst)\b/.test(t) && !/director|vp |vice president|head of|cto|cio|chief|svp|evp/.test(t))
+    flags.push('❌ **Persona** — Appears to be too low level (manager/engineer). ICP requires Director and above.');
+  else if (/director|vp |vice president|head of|cto|cio|chief|svp|evp/.test(t))
+    passes.push('✅ **Persona** — Director-level or above detected');
+  else
+    passes.push('⚠️ **Persona** — Title not clear — confirm they are Director and above');
 
-Be direct and reference specific playbook rules.`;
+  // Industry exclusions
+  if (/school|university|college|non.?profit|ngo|church|government|public sector|federal|consul|consulting firm/.test(t))
+    flags.push('❌ **Industry** — Excluded industry detected (Education, Non-Profit, Government, Consulting)');
+  else
+    passes.push('✅ **Industry** — No excluded industry detected');
 
-  try {
-    const text = await callGemini(prompt);
-    setResult('qualOut', text);
-  } catch(e) {
-    setError('qualOut', e.message);
-  } finally {
-    setBtn('qualBtn', false, '✅ Should I Book This Lead?');
-  }
+  // Tricentis employee
+  if (/@tricentis\.com|tricentis employee/.test(t))
+    flags.push('❌ **Email Domain** — Tricentis employee — do not book');
+  else
+    passes.push('✅ **Email Domain** — Not a Tricentis employee');
+
+  // Services vs product
+  if (/outsourc|consulting|services company|agency|staff augment/.test(t))
+    flags.push('❌ **Business Type** — May be a services/outsourcing company rather than a software product company');
+  else
+    passes.push('✅ **Business Type** — Appears to be a software product company');
+
+  // Pain
+  const hasPain = /long.*test|test.*cycle|regression|e2e|escaping defect|defect|production bug|coverage|ci cycle|slow release|manual test|automation/.test(t);
+  if (hasPain) passes.push('✅ **Pain** — Valid pain indicators detected');
+  else passes.push('⚠️ **Pain** — No clear pain mentioned — ask: "Do you run all tests all the time? Any escaping defects?"');
+
+  const bookable = flags.filter(f => f.startsWith('❌')).length === 0;
+
+  const verdict = bookable
+    ? `# ✅ BOOK THIS LEAD\n\nNo disqualifying flags found. Proceed with scheduling a demo.\n`
+    : `# ❌ DO NOT BOOK\n\nFound ${flags.filter(f=>f.startsWith('❌')).length} disqualifying issue(s). Review flags below.\n`;
+
+  const dispoSuggestion = !bookable ? `\n---\n## 🗂️ Suggested Dispo Code:\n${
+    flags.some(f=>/territory/i.test(f)) ? '→ **SeaLights IT** (Irrelevant Territory)' :
+    flags.some(f=>/tech stack/i.test(f)) ? '→ **SeaLights TSNS** (Tech Stack Not Supported)' :
+    flags.some(f=>/persona|level/i.test(f)) ? '→ **SeaLights TLL** (Too Low Level)' :
+    flags.some(f=>/industry/i.test(f)) ? '→ **SeaLights IC** (Irrelevant Company)' :
+    flags.some(f=>/business type/i.test(f)) ? '→ **SeaLights IC** (Irrelevant Company — services firm)' :
+    '→ Review flags above and select the most relevant dispo'
+  }` : '';
+
+  const qualQuestions = `\n---\n## ❓ Questions to Still Ask:\n• "What primary programming languages does your team develop in?"\n• "Is the software developed in-house, or is any of it outsourced?"\n• "Do you run all your tests all the time? How long does a full E2E run take?"\n• "Do you ever have issues with escaping defects or untested code reaching production?"`;
+
+  const raw = verdict
+    + '\n---\n## 📋 Checklist Results:\n\n'
+    + [...passes, ...flags].join('\n')
+    + qualQuestions
+    + dispoSuggestion;
+
+  showBox('qualBox', 'qualOut', fmt(raw));
 }
 </script>
 </body>
