@@ -3,858 +3,1006 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SeaLights BDR Playbook</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<title>SeaLights BDR Playbook Coach</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #ffffff;
-    --surface: #f8f8f8;
-    --surface2: #f0f0f0;
-    --border: #d0d0d0;
-    --accent: #e85d2f;
-    --accent2: #f0a500;
-    --accent3: #3b9eff;
-    --text: #1a1a1a;
-    --text-dim: #666666;
-    --text-muted: #999999;
-    --success: #22c55e;
-    --radius: 12px;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+:root {
+  /* ── Tricentis Brand Palette ── */
+  --bg:           #0A1628;
+  --surface:      #0D1E3A;
+  --surface2:     #112244;
+  --surface3:     #152B55;
+  --border:       #1E3A5F;
+  --border-soft:  rgba(255,255,255,0.08);
+  --accent:       #005CE6;
+  --accent-bright:#0070F3;
+  --accent-dim:   rgba(0,112,243,0.14);
+  --accent-glow:  rgba(0,112,243,0.35);
+  --cyan:         #00C2FF;
+  --cyan-dim:     rgba(0,194,255,0.12);
+  --gold:         #FFAA00;
+  --gold-dim:     rgba(255,170,0,0.12);
+  --green:        #00D68F;
+  --green-dim:    rgba(0,214,143,0.12);
+  --red:          #FF4D6A;
+  --red-dim:      rgba(255,77,106,0.12);
+  --text:         #FFFFFF;
+  --text-dim:     #8FA8C8;
+  --text-muted:   #3D5A80;
+  --radius:       12px;
+  --font:         'DM Sans', sans-serif;
+  --mono:         'JetBrains Mono', monospace;
+}
 
-  /* HEADER */
-  .header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 18px 32px;
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .logo-mark {
-    width: 36px; height: 36px;
-    background: var(--accent);
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'DM Serif Display', serif;
-    font-size: 24px;
-    color: white;
-    font-weight: 400;
-  }
-  .logo-text { font-size: 20px; font-weight: 700; letter-spacing: 0.05em; }
-  .logo-sub { font-size: 24px; color: var(--text-dim); font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; }
-  .api-badge {
-    display: flex; align-items: center; gap: 8px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 6px 14px;
-    font-size: 16px;
-    color: var(--text-dim);
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .api-badge:hover { border-color: var(--accent); color: var(--text); }
-  .api-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text-muted); }
-  .api-dot.connected { background: var(--success); box-shadow: 0 0 6px var(--success); }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* NAV TABS */
-  .nav {
-    display: flex;
-    gap: 2px;
-    padding: 16px 32px 0;
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    overflow-x: auto;
-  }
-  .nav-tab {
-    padding: 10px 20px;
-    border-radius: 8px 8px 0 0;
-    cursor: pointer;
-    font-size: 17px;
-    font-weight: 600;
-    color: var(--text-dim);
-    border: 1px solid transparent;
-    border-bottom: none;
-    transition: all 0.2s;
-    white-space: nowrap;
-    display: flex; align-items: center; gap: 7px;
-    background: transparent;
-  }
-  .nav-tab:hover { color: var(--text); background: var(--surface2); }
-  .nav-tab.active {
-    color: var(--text);
-    background: var(--bg);
-    border-color: var(--border);
-    border-bottom-color: var(--bg);
-  }
-  .nav-tab .tab-icon { font-size: 20px; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-size: 14px;
+  line-height: 1.6;
+  /* Subtle dot-grid background pattern */
+  background-image: radial-gradient(circle, rgba(0,194,255,0.06) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
 
-  /* MAIN */
-  .main { padding: 32px; max-width: 1100px; margin: 0 auto; }
-  .tab-content { display: none; animation: fadeIn 0.3s ease; }
-  .tab-content.active { display: block; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-bright); }
 
-  /* CARDS */
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 24px;
-    margin-bottom: 20px;
-  }
-  .card-title {
-    font-size: 24px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 16px;
-  }
+/* ─── HEADER ─── */
+.header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 28px;
+  height: 60px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 200;
+  /* Subtle top-edge glow line */
+  box-shadow: 0 1px 0 0 var(--border), 0 4px 24px rgba(0,0,0,0.5);
+  /* Fine diagonal line overlay */
+  background-image:
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 18px,
+      rgba(0,194,255,0.025) 18px,
+      rgba(0,194,255,0.025) 19px
+    );
+  background-color: var(--surface);
+}
+.logo { display: flex; align-items: center; gap: 12px; }
 
-  /* SETUP PANEL */
-  .setup-panel {
-    background: linear-gradient(135deg, #1a1f2b 0%, #12151c 100%);
-    border: 1px solid var(--accent);
-    border-radius: var(--radius);
-    padding: 28px;
-    margin-bottom: 28px;
-  }
-  .setup-title { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
-  .setup-desc { font-size: 17px; color: var(--text-dim); margin-bottom: 20px; }
-  .setup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .form-group { display: flex; flex-direction: column; gap: 6px; }
-  .form-label { font-size: 24px; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; }
-  .form-input, .form-textarea, .form-select {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 10px 14px;
-    color: var(--text);
-    font-family: 'DM Mono', monospace;
-    font-size: 17px;
-    transition: border-color 0.2s;
-    width: 100%;
-  }
-  .form-input:focus, .form-textarea:focus, .form-select:focus {
-    outline: none;
-    border-color: var(--accent);
-  }
-  .form-textarea { resize: vertical; min-height: 80px; }
-  .form-select option { background: var(--surface); }
-  .btn {
-    padding: 10px 22px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
-    font-size: 17px;
-    font-weight: 700;
-    transition: all 0.2s;
-    display: inline-flex; align-items: center; gap: 8px;
-  }
-  .btn-primary { background: var(--accent); color: white; }
-  .btn-primary:hover { background: #d44e22; transform: translateY(-1px); }
-  .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
-  .btn-secondary:hover { border-color: var(--accent); }
+/* Full Tricentis SVG (mark + wordmark combined) */
+.tricentis-full-logo { flex-shrink: 0; }
 
-  /* AI RESPONSE */
-  .ai-box {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px;
-    margin-top: 16px;
-    display: none;
-  }
-  .ai-box.visible { display: block; }
-  .ai-header {
-    display: flex; align-items: center; gap: 8px;
-    font-size: 24px; font-weight: 700; color: var(--accent2);
-    text-transform: uppercase; letter-spacing: 0.1em;
-    margin-bottom: 14px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--border);
-  }
-  .ai-content {
-    font-family: 'DM Mono', monospace;
-    font-size: 17px;
-    line-height: 1.8;
-    color: var(--text);
-    white-space: pre-wrap;
-  }
-  .ai-content strong { color: var(--accent2); font-weight: 500; }
-  .loading {
-    display: flex; align-items: center; gap: 10px;
-    color: var(--text-dim); font-size: 17px;
-  }
-  .loading-dots span {
-    animation: blink 1.4s infinite;
-    display: inline-block;
-  }
-  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
-  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
-  @keyframes blink { 0%,80%,100% { opacity: 0; } 40% { opacity: 1; } }
+/* Plus between logos */
+.logo-plus {
+  font-size: 18px; font-weight: 300;
+  color: rgba(255,255,255,0.4);
+  flex-shrink: 0;
+  line-height: 1;
+  margin: 0 -2px;
+}
 
-  /* SCRIPT CARDS */
-  .script-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; margin-bottom: 20px; }
-  .script-card {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 18px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .script-card:hover, .script-card.selected {
-    border-color: var(--accent);
-    background: rgba(232, 93, 47, 0.07);
-  }
-  .script-card-icon { font-size: 22px; margin-bottom: 8px; }
-  .script-card-title { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
-  .script-card-desc { font-size: 16px; color: var(--text-dim); line-height: 1.5; }
+/* SeaLights italic script wordmark */
+.sealights-logo { display: flex; align-items: center; flex-shrink: 0; }
+.sealights-wordmark { display: block; }
 
-  /* OBJECTION LIST */
-  .objection-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; margin-bottom: 20px; }
-  .obj-pill {
-    padding: 10px 16px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .obj-pill:hover, .obj-pill.selected { border-color: var(--accent3); color: var(--accent3); }
-  .obj-pill-icon { font-size: 20px; }
+/* BDR Playbook pill tag */
+.header-tag {
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--cyan);
+  background: var(--cyan-dim);
+  border: 1px solid rgba(0,194,255,0.25);
+  border-radius: 4px;
+  padding: 3px 8px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
 
-  /* DASHBOARD */
-  .dash-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
-  .dash-stat {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px;
-    text-align: center;
-  }
-  .dash-stat-val { font-family: 'DM Serif Display', serif; font-size: 36px; color: var(--accent); margin-bottom: 4px; }
-  .dash-stat-label { font-size: 24px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; }
-  .quick-links { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-  .quick-link {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 16px;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex; align-items: center; gap: 14px;
-  }
-  .quick-link:hover { border-color: var(--accent); transform: translateY(-2px); }
-  .quick-link-icon { font-size: 24px; }
-  .quick-link-title { font-size: 17px; font-weight: 700; margin-bottom: 2px; }
-  .quick-link-desc { font-size: 24px; color: var(--text-dim); }
+/* Remove old unused logo rules */
 
-  /* DISPO TABLE */
-  .dispo-table { width: 100%; border-collapse: collapse; font-size: 16px; }
-  .dispo-table th {
-    background: var(--surface2);
-    padding: 10px 14px;
-    text-align: left;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-dim);
-    border-bottom: 1px solid var(--border);
-  }
-  .dispo-table td {
-    padding: 10px 14px;
-    border-bottom: 1px solid var(--border);
-    font-family: 'DM Mono', monospace;
-    font-size: 16px;
-  }
-  .dispo-table tr:hover td { background: var(--surface2); }
-  .badge {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-  }
-  .badge-red { background: rgba(232,93,47,0.15); color: var(--accent); }
-  .badge-yellow { background: rgba(240,165,0,0.15); color: var(--accent2); }
-  .badge-green { background: rgba(34,197,94,0.15); color: var(--success); }
-  .badge-blue { background: rgba(59,158,255,0.15); color: var(--accent3); }
+.api-btn {
+  display: flex; align-items: center; gap: 8px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 7px 16px;
+  cursor: pointer;
+  font-family: var(--font);
+  font-size: 12px; font-weight: 500;
+  color: var(--text-dim);
+  transition: all 0.2s;
+}
+.api-btn:hover {
+  border-color: var(--accent-bright);
+  color: var(--text);
+  background: var(--accent-dim);
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+.status-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--text-muted); flex-shrink: 0;
+  transition: all 0.3s;
+}
+.status-dot.on {
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+}
 
-  /* NEXT STEPS */
-  .outcome-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; }
-  .outcome-btn {
-    padding: 16px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    cursor: pointer;
-    text-align: center;
-    transition: all 0.2s;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
-  }
-  .outcome-btn:hover, .outcome-btn.selected { border-color: var(--accent2); }
-  .outcome-btn-icon { font-size: 26px; margin-bottom: 8px; }
-  .outcome-btn-label { font-size: 16px; font-weight: 700; }
+/* ─── LAYOUT ─── */
+.app { display: flex; height: calc(100vh - 60px); }
 
-  /* QUALIFY CHECKLIST */
-  .checklist { list-style: none; }
-  .checklist li {
-    display: flex; align-items: flex-start; gap: 12px;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 17px;
-    line-height: 1.5;
-  }
-  .check-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+/* ─── SIDEBAR NAV ─── */
+.sidebar {
+  width: 204px; flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 20px 10px;
+  display: flex; flex-direction: column; gap: 3px;
+  overflow-y: auto;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px; font-weight: 500;
+  color: var(--text-dim);
+  transition: all 0.15s;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  user-select: none;
+  position: relative;
+}
+.nav-item:hover {
+  background: var(--accent-dim);
+  color: var(--text);
+  border-color: var(--border);
+}
+.nav-item.active {
+  background: var(--accent-dim);
+  border-color: var(--accent-bright);
+  color: var(--text);
+  /* Left accent bar */
+  box-shadow: inset 3px 0 0 0 var(--cyan);
+}
+.nav-icon { font-size: 15px; flex-shrink: 0; }
 
-  /* SECTION LABEL */
-  .section-label {
-    font-size: 24px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-dim);
-    margin-bottom: 12px;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+/* ─── MAIN CONTENT ─── */
+.content {
+  flex: 1; overflow-y: auto;
+  padding: 32px 36px;
+  max-width: 920px;
+}
+.tab-panel { display: none; animation: fadeUp 0.22s ease; }
+.tab-panel.active { display: block; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
 
-  /* PAGE TITLE */
-  .page-title { font-family: 'DM Serif Display', serif; font-size: 28px; margin-bottom: 6px; }
-  .page-sub { font-size: 17px; color: var(--text-dim); margin-bottom: 28px; }
+/* ─── PAGE HEADER ─── */
+.page-hd { margin-bottom: 28px; }
+.page-hd h1 {
+  font-size: 23px; font-weight: 700;
+  letter-spacing: -0.01em; margin-bottom: 5px;
+  color: var(--text);
+}
+.page-hd p { color: var(--text-dim); font-size: 13.5px; }
 
-  /* INLINE ROW */
-  .row { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
-  .row .form-group { flex: 1; min-width: 180px; }
+/* ─── SECTION LABEL ─── */
+.sec {
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.12em;
+  color: var(--cyan);
+  margin-bottom: 12px; margin-top: 28px;
+  display: flex; align-items: center; gap: 10px;
+}
+.sec::after {
+  content: '';
+  flex: 1; height: 1px;
+  background: linear-gradient(to right, var(--border), transparent);
+}
 
-  /* MODAL */
-  .modal-overlay {
-    display: none;
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.7);
-    z-index: 200;
-    align-items: center;
-    justify-content: center;
-  }
-  .modal-overlay.open { display: flex; }
-  .modal {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 28px;
-    width: 90%;
-    max-width: 500px;
-    max-height: 80vh;
-    overflow-y: auto;
-  }
-  .modal-title { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
-  .modal-desc { font-size: 17px; color: var(--text-dim); margin-bottom: 20px; }
-  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+/* ─── CARD ─── */
+.card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+}
+.card-title {
+  font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--cyan); margin-bottom: 16px;
+}
 
-  .warning { background: rgba(240,165,0,0.08); border: 1px solid rgba(240,165,0,0.3); border-radius: 8px; padding: 12px 16px; font-size: 16px; color: var(--accent2); margin-top: 14px; }
+/* ─── FORM ELEMENTS ─── */
+.form-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+.form-group { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 140px; }
+.form-label {
+  font-size: 10px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.09em;
+  color: var(--text-dim);
+}
+.form-input, .form-select, .form-textarea {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 9px 12px;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 13px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+}
+.form-input::placeholder, .form-textarea::placeholder { color: var(--text-muted); }
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  outline: none;
+  border-color: var(--accent-bright);
+  box-shadow: 0 0 0 3px rgba(0,112,243,0.2);
+}
+.form-select option { background: var(--surface2); color: var(--text); }
+.form-textarea { resize: vertical; min-height: 72px; }
 
-  @media (max-width: 600px) {
-    .header { padding: 14px 16px; }
-    .nav { padding: 12px 16px 0; }
-    .main { padding: 20px 16px; }
-    .dash-grid { grid-template-columns: repeat(2, 1fr); }
-    .quick-links { grid-template-columns: 1fr; }
-    .setup-grid { grid-template-columns: 1fr; }
-  }
+/* ─── BUTTONS ─── */
+.btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font);
+  font-size: 13px; font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: all 0.2s;
+}
+.btn-primary {
+  background: var(--accent-bright);
+  color: #fff;
+  box-shadow: 0 2px 12px rgba(0,112,243,0.3);
+}
+.btn-primary:hover {
+  background: #1a80f5;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0,112,243,0.5);
+}
+.btn-primary:disabled {
+  opacity: 0.45; cursor: not-allowed;
+  transform: none; box-shadow: none;
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--accent-bright);
+  border: 1px solid var(--accent-bright);
+}
+.btn-ghost:hover {
+  background: var(--accent-dim);
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+/* ─── PILL SELECTORS ─── */
+.pill-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.pill {
+  padding: 7px 14px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-size: 12px; font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex; align-items: center; gap: 6px;
+  user-select: none;
+  color: var(--text-dim);
+}
+.pill:hover {
+  border-color: var(--accent-bright);
+  color: var(--text);
+  background: var(--accent-dim);
+}
+.pill.selected {
+  background: var(--accent-dim);
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+.pill-icon { font-size: 13px; }
+
+/* ─── SCRIPT / OUTCOME CARDS ─── */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px; margin-bottom: 16px;
+}
+.sel-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.18s;
+  user-select: none;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+}
+.sel-card:hover {
+  border-color: var(--accent-bright);
+  background: var(--surface3);
+  box-shadow: 0 4px 20px rgba(0,112,243,0.2);
+  transform: translateY(-1px);
+}
+.sel-card.selected {
+  background: var(--accent-dim);
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 1px var(--cyan), 0 4px 20px rgba(0,194,255,0.15);
+}
+.sel-card-icon { font-size: 20px; margin-bottom: 8px; }
+.sel-card-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; color: var(--text); }
+.sel-card-desc { font-size: 11px; color: var(--text-dim); line-height: 1.55; }
+
+/* ─── AI RESPONSE BOX ─── */
+.ai-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-top: 16px;
+  overflow: hidden;
+  display: none;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+}
+.ai-box.show { display: block; animation: fadeUp 0.22s ease; }
+.ai-box-header {
+  display: flex; align-items: center; gap: 9px;
+  padding: 12px 18px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--cyan);
+}
+.ai-box-body {
+  padding: 18px;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.85;
+  color: var(--text);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.ai-box-body strong { color: var(--cyan); font-weight: 600; }
+.ai-box-body .hl-blue  { color: var(--accent-bright); }
+.ai-box-body .hl-green { color: var(--green); }
+.ai-box-body .hl-red   { color: var(--red); }
+
+/* Loading animation */
+.loading-wrap {
+  display: flex; align-items: center; gap: 10px;
+  padding: 18px; color: var(--text-dim); font-size: 13px;
+}
+.loader {
+  width: 18px; height: 18px;
+  border: 2px solid var(--border);
+  border-top-color: var(--cyan);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─── DASHBOARD STATS ─── */
+.stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 24px; }
+.stat-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 20px 18px;
+  text-align: center;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  position: relative; overflow: hidden;
+}
+/* Cyan top accent bar */
+.stat-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-bright), var(--cyan));
+}
+.stat-val {
+  font-family: var(--mono);
+  font-size: 36px; font-weight: 700;
+  color: var(--cyan);
+  font-variant-numeric: tabular-nums;
+  line-height: 1; margin-bottom: 7px;
+  letter-spacing: -0.02em;
+}
+.stat-label {
+  font-size: 10px; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--text-dim);
+  font-weight: 600;
+}
+
+.quick-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.quick-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 15px 18px;
+  cursor: pointer;
+  transition: all 0.18s;
+  display: flex; align-items: center; gap: 14px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+.quick-card:hover {
+  border-color: var(--accent-bright);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(0,112,243,0.2);
+  background: var(--surface3);
+}
+.quick-card-icon { font-size: 22px; flex-shrink: 0; }
+.quick-card-title { font-size: 13px; font-weight: 600; margin-bottom: 2px; color: var(--text); }
+.quick-card-desc { font-size: 11px; color: var(--text-dim); line-height: 1.45; }
+
+.stack-row { display: flex; gap: 24px; flex-wrap: wrap; }
+.stack-col .stack-label {
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  margin-bottom: 10px;
+}
+.stack-label.good { color: var(--green); }
+.stack-label.bad  { color: var(--red); }
+.stack-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag {
+  padding: 3px 10px;
+  border-radius: 5px;
+  font-family: var(--mono);
+  font-size: 11px; font-weight: 500;
+}
+.tag.good {
+  background: var(--green-dim);
+  color: var(--green);
+  border: 1px solid rgba(0,214,143,0.2);
+}
+.tag.bad {
+  background: var(--red-dim);
+  color: var(--red);
+  border: 1px solid rgba(255,77,106,0.2);
+}
+
+/* ─── CHECKLIST ─── */
+.checklist { list-style: none; }
+.checklist li {
+  display: flex; gap: 12px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px; line-height: 1.6;
+}
+.checklist li:last-child { border-bottom: none; }
+.check-icon { flex-shrink: 0; font-size: 14px; margin-top: 2px; }
+
+/* ─── DISPO TABLE ─── */
+.table-wrap {
+  overflow-x: auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+}
+table { width: 100%; border-collapse: collapse; }
+thead { background: var(--surface); }
+th {
+  padding: 11px 16px;
+  text-align: left;
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--text-dim); white-space: nowrap;
+  border-bottom: 1px solid var(--border);
+}
+td {
+  padding: 11px 16px;
+  border-top: 1px solid var(--border);
+  font-size: 12.5px;
+  font-family: var(--mono);
+  background: var(--surface2);
+}
+/* Alternating rows */
+tr:nth-child(even) td { background: var(--surface); }
+tr:hover td { background: var(--surface3) !important; }
+
+.badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 9px;
+  border-radius: 5px;
+  font-family: var(--font);
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+/* Colored dot inside badge */
+.badge::before {
+  content: '';
+  display: inline-block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.badge-red    { background: var(--red-dim);   color: var(--red); }
+.badge-red::before    { background: var(--red); box-shadow: 0 0 5px var(--red); }
+.badge-yellow { background: var(--gold-dim);  color: var(--gold); }
+.badge-yellow::before { background: var(--gold); box-shadow: 0 0 5px var(--gold); }
+.badge-green  { background: var(--green-dim); color: var(--green); }
+.badge-green::before  { background: var(--green); box-shadow: 0 0 5px var(--green); }
+.badge-blue   { background: var(--cyan-dim);  color: var(--cyan); }
+.badge-blue::before   { background: var(--cyan); box-shadow: 0 0 5px var(--cyan); }
+
+/* ─── MODAL ─── */
+.modal-bg {
+  display: none; position: fixed; inset: 0;
+  background: rgba(5,12,28,0.82);
+  backdrop-filter: blur(6px);
+  z-index: 500;
+  align-items: center; justify-content: center;
+}
+.modal-bg.open { display: flex; }
+.modal {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 30px;
+  width: 90%; max-width: 490px;
+  max-height: 85vh; overflow-y: auto;
+  animation: fadeUp 0.22s ease;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 0 1px var(--border-soft);
+}
+.modal h2 {
+  font-size: 17px; font-weight: 700;
+  letter-spacing: -0.01em; margin-bottom: 5px;
+}
+.modal p { font-size: 12.5px; color: var(--text-dim); margin-bottom: 20px; line-height: 1.6; }
+.how-to {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px; padding: 14px; margin-bottom: 16px;
+  font-size: 12px; line-height: 2.1; color: var(--text-dim);
+}
+.how-to strong { color: var(--text); }
+.how-to a { color: var(--cyan); text-decoration: none; }
+.how-to a:hover { text-decoration: underline; }
+.info-box {
+  background: var(--gold-dim);
+  border: 1px solid rgba(255,170,0,0.22);
+  border-radius: 8px; padding: 11px 14px;
+  font-size: 12px; color: var(--gold);
+  margin-top: 12px; line-height: 1.65;
+}
+.modal-footer { display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px; }
+.test-msg { font-size: 12px; margin-top: 8px; min-height: 18px; }
+
+/* ─── COPY BTN AREA ─── */
+.copy-row {
+  padding: 10px 18px;
+  border-top: 1px solid var(--border);
+  display: flex; gap: 8px;
+  background: var(--surface2);
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 640px) {
+  .sidebar { width: 52px; }
+  .nav-item span:not(.nav-icon) { display: none; }
+  .content { padding: 20px 16px; }
+  .stats-row { grid-template-columns: 1fr 1fr; }
+  .quick-grid { grid-template-columns: 1fr; }
+  .card-grid { grid-template-columns: 1fr 1fr; }
+}
 </style>
 </head>
 <body>
 
-<div class="header">
+<!-- HEADER -->
+<header class="header">
   <div class="logo">
-    <div class="logo-mark">SL</div>
-    <div>
-      <div class="logo-text">SeaLights BDR</div>
-      <div class="logo-sub">Playbook Coach</div>
+
+    <!-- Tricentis logo: geometric X mark (two pairs of chevrons) + wordmark -->
+    <svg class="tricentis-full-logo" viewBox="0 0 220 40" fill="none" xmlns="http://www.w3.org/2000/svg" height="30">
+      <!-- X mark: top-left chevron pair -->
+      <path d="M4 4 L16 4 L26 14 L16 24 L4 24 L14 14 Z" fill="white"/>
+      <!-- X mark: top-right chevron pair -->
+      <path d="M36 4 L24 4 L14 14 L24 24 L36 24 L26 14 Z" fill="white"/>
+      <!-- X mark: bottom-left chevron pair -->
+      <path d="M4 18 L16 18 L26 28 L16 38 L4 38 L14 28 Z" fill="white"/>
+      <!-- X mark: bottom-right chevron pair -->
+      <path d="M36 18 L24 18 L14 28 L24 38 L36 38 L26 28 Z" fill="white"/>
+      <!-- Tricentis wordmark -->
+      <text x="46" y="30" font-family="'DM Sans', sans-serif" font-size="24" font-weight="700" fill="white" letter-spacing="-0.4">Tricentis</text>
+    </svg>
+
+    <!-- Plus separator -->
+    <span class="logo-plus">+</span>
+
+    <!-- SeaLights: italic script wordmark with yellow dot -->
+    <div class="sealights-logo">
+      <svg viewBox="0 0 192 38" fill="none" xmlns="http://www.w3.org/2000/svg" height="28" class="sealights-wordmark">
+        <text x="2" y="30" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif" font-size="30" font-weight="400" font-style="italic" fill="white">Sealights</text>
+        <!-- Yellow dot — the signature accent above the 'l' in Sealights -->
+        <circle cx="101" cy="5" r="5" fill="#F5D800"/>
+      </svg>
     </div>
+
+    <!-- BDR tag pill -->
+    <div class="header-tag">BDR Playbook</div>
+
   </div>
-  <div class="api-badge" onclick="openSettings()">
-    <div class="api-dot" id="apiDot"></div>
-    <span id="apiStatus">Setup API Key</span>
-  </div>
+  <button class="api-btn" onclick="openModal()">
+    <div class="status-dot" id="statusDot"></div>
+    <span id="statusText">Connect API Key</span>
+  </button>
+</header>
+
+<!-- APP BODY -->
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="nav-item active" onclick="nav(this,'dashboard')"><span class="nav-icon">🏠</span><span>Dashboard</span></div>
+    <div class="nav-item" onclick="nav(this,'scripts')"><span class="nav-icon">📞</span><span>Call Scripts</span></div>
+    <div class="nav-item" onclick="nav(this,'objections')"><span class="nav-icon">🛡️</span><span>Objections</span></div>
+    <div class="nav-item" onclick="nav(this,'email')"><span class="nav-icon">✉️</span><span>Email Drafter</span></div>
+    <div class="nav-item" onclick="nav(this,'nextsteps')"><span class="nav-icon">📋</span><span>Next Steps</span></div>
+    <div class="nav-item" onclick="nav(this,'qualify')"><span class="nav-icon">✅</span><span>Qualification</span></div>
+    <div class="nav-item" onclick="nav(this,'dispos')"><span class="nav-icon">🗂️</span><span>Dispos</span></div>
+  </nav>
+
+  <!-- CONTENT -->
+  <main class="content">
+
+    <!-- ══════════ DASHBOARD ══════════ -->
+    <div id="tab-dashboard" class="tab-panel active">
+      <div class="page-hd">
+        <h1>Good to see you 👋</h1>
+        <p>Your SeaLights BDR Playbook — all scripts, objections &amp; tools in one place.</p>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-val">12</div><div class="stat-label">Objection Responses</div></div>
+        <div class="stat-card"><div class="stat-val">8</div><div class="stat-label">Call Scripts</div></div>
+        <div class="stat-card"><div class="stat-val">6</div><div class="stat-label">Email Templates</div></div>
+      </div>
+
+      <div class="sec">Quick Access</div>
+      <div class="quick-grid">
+        <div class="quick-card" onclick="nav(document.querySelector('[onclick*=scripts]'),'scripts')"><div class="quick-card-icon">📞</div><div><div class="quick-card-title">Call Scripts</div><div class="quick-card-desc">Barbara script, inbound, AI feature pitch</div></div></div>
+        <div class="quick-card" onclick="nav(document.querySelector('[onclick*=objections]'),'objections')"><div class="quick-card-icon">🛡️</div><div><div class="quick-card-title">Handle an Objection</div><div class="quick-card-desc">Budget, inhouse tool, wrong person &amp; more</div></div></div>
+        <div class="quick-card" onclick="nav(document.querySelector('[onclick*=email]'),'email')"><div class="quick-card-icon">✉️</div><div><div class="quick-card-title">Draft an Email</div><div class="quick-card-desc">Personalized from call notes + LinkedIn</div></div></div>
+        <div class="quick-card" onclick="nav(document.querySelector('[onclick*=nextsteps]'),'nextsteps')"><div class="quick-card-icon">📋</div><div><div class="quick-card-title">After-Call Next Steps</div><div class="quick-card-desc">Exact actions for every call outcome</div></div></div>
+        <div class="quick-card" onclick="nav(document.querySelector('[onclick*=qualify]'),'qualify')"><div class="quick-card-icon">✅</div><div><div class="quick-card-title">Qualify a Lead</div><div class="quick-card-desc">ICP checklist + qualification questions</div></div></div>
+        <div class="quick-card" onclick="openModal()"><div class="quick-card-icon">⚙️</div><div><div class="quick-card-title">Setup API Key</div><div class="quick-card-desc">Connect Gemini to power AI responses</div></div></div>
+      </div>
+
+      <div class="sec">Supported Tech Stack</div>
+      <div class="card">
+        <div class="stack-row">
+          <div class="stack-col">
+            <div class="stack-label good">✅ Supported</div>
+            <div class="stack-tags">
+              <span class="tag good">Java</span><span class="tag good">JavaScript</span><span class="tag good">Angular</span><span class="tag good">React</span><span class="tag good">TypeScript</span><span class="tag good">NodeJS</span><span class="tag good">Scala</span><span class="tag good">Python</span><span class="tag good">C#</span><span class="tag good">.NET</span><span class="tag good">Go</span><span class="tag good">C++ (GCC)</span><span class="tag good">C (GCC)</span>
+            </div>
+          </div>
+          <div class="stack-col">
+            <div class="stack-label bad">❌ Not Supported</div>
+            <div class="stack-tags">
+              <span class="tag bad">Mobile (iOS/Android)</span><span class="tag bad">Salesforce</span><span class="tag bad">Ruby</span><span class="tag bad">Oracle</span><span class="tag bad">PHP</span><span class="tag bad">HTML</span><span class="tag bad">Linux</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ CALL SCRIPTS ══════════ -->
+    <div id="tab-scripts" class="tab-panel">
+      <div class="page-hd">
+        <h1>Call Scripts</h1>
+        <p>Select a script type — get the full playbook script, personalized for your prospect.</p>
+      </div>
+
+      <div class="sec">Choose a Script</div>
+      <div class="card-grid" id="scriptCards">
+        <div class="sel-card" onclick="pickScript(this,'cold_call')"><div class="sel-card-icon">🧊</div><div class="sel-card-title">Cold Call — Barbara Script</div><div class="sel-card-desc">Standard outbound with pitch &amp; CTA options</div></div>
+        <div class="sel-card" onclick="pickScript(this,'short_advanced')"><div class="sel-card-icon">⚡</div><div class="sel-card-title">Short &amp; Focused (Advanced)</div><div class="sel-card-desc">Concise AI capabilities &amp; quality gates pitch</div></div>
+        <div class="sel-card" onclick="pickScript(this,'wp_script')"><div class="sel-card-icon">📄</div><div class="sel-card-title">White Paper Download</div><div class="sel-card-desc">For prospects who downloaded a WP or watched a demo</div></div>
+        <div class="sel-card" onclick="pickScript(this,'ai_feature')"><div class="sel-card-icon">🤖</div><div class="sel-card-title">AI Feature Script</div><div class="sel-card-desc">Highlight AI test generation &amp; code-to-test mapping</div></div>
+        <div class="sel-card" onclick="pickScript(this,'zoom_qual')"><div class="sel-card-icon">🎥</div><div class="sel-card-title">Zoom Qualification Script</div><div class="sel-card-desc">Full script for scheduled qualification calls</div></div>
+        <div class="sel-card" onclick="pickScript(this,'demo_handoff')"><div class="sel-card-icon">🤝</div><div class="sel-card-title">Demo Handoff to AE</div><div class="sel-card-desc">Opening the demo session &amp; handing off to AE</div></div>
+        <div class="sel-card" onclick="pickScript(this,'dev_magic')"><div class="sel-card-icon">💻</div><div class="sel-card-title">Magic Paragraph — Dev/Eng</div><div class="sel-card-desc">Tailored pitch for engineering personas</div></div>
+        <div class="sel-card" onclick="pickScript(this,'qa_magic')"><div class="sel-card-icon">🔍</div><div class="sel-card-title">Magic Paragraph — QA/QE</div><div class="sel-card-desc">Tailored pitch for QA/QE personas</div></div>
+      </div>
+
+      <div id="scriptInputs" style="display:none">
+        <div class="sec">Customize (Optional)</div>
+        <div class="card">
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Prospect Name</label><input class="form-input" id="sProspect" placeholder="e.g. John Smith"></div>
+            <div class="form-group"><label class="form-label">Company</label><input class="form-input" id="sCompany" placeholder="e.g. Acme Corp"></div>
+            <div class="form-group">
+              <label class="form-label">Persona</label>
+              <select class="form-select" id="sPersona">
+                <option value="">Select...</option>
+                <option>VP of Engineering</option>
+                <option>Director of QA</option>
+                <option>QE Manager</option>
+                <option>CTO</option>
+                <option>Engineering Manager</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn btn-primary" id="scriptBtn" onclick="runScript()">🎯 Get Script</button>
+        </div>
+      </div>
+
+      <div class="ai-box" id="scriptBox">
+        <div class="ai-box-header">📋 Playbook Script</div>
+        <div class="ai-box-body" id="scriptOut"></div>
+      </div>
+    </div>
+
+    <!-- ══════════ OBJECTION HANDLER ══════════ -->
+    <div id="tab-objections" class="tab-panel">
+      <div class="page-hd">
+        <h1>Objection Handler</h1>
+        <p>Select a common objection or type your own — get the exact playbook response.</p>
+      </div>
+
+      <div class="sec">Common Objections</div>
+      <div class="pill-grid">
+        <div class="pill" onclick="pickObj(this,'send_email')"><span class="pill-icon">📧</span>Send me an email</div>
+        <div class="pill" onclick="pickObj(this,'inhouse_solution')"><span class="pill-icon">🏠</span>We have an inhouse solution</div>
+        <div class="pill" onclick="pickObj(this,'already_tool')"><span class="pill-icon">🔧</span>We already have a tool</div>
+        <div class="pill" onclick="pickObj(this,'no_budget')"><span class="pill-icon">💸</span>We don't have budget</div>
+        <div class="pill" onclick="pickObj(this,'not_dm')"><span class="pill-icon">👤</span>I'm not a DM</div>
+        <div class="pill" onclick="pickObj(this,'not_relevant')"><span class="pill-icon">🚫</span>Not relevant / not our focus</div>
+        <div class="pill" onclick="pickObj(this,'how_does_it_work')"><span class="pill-icon">❓</span>How does it work?</div>
+        <div class="pill" onclick="pickObj(this,'not_qa')"><span class="pill-icon">🤷</span>I don't handle QA</div>
+        <div class="pill" onclick="pickObj(this,'tricentis_existing')"><span class="pill-icon">🔗</span>We already use Tricentis</div>
+        <div class="pill" onclick="pickObj(this,'clevel_exec')"><span class="pill-icon">👔</span>High-Level Exec / C-Level</div>
+        <div class="pill" onclick="pickObj(this,'not_right_person')"><span class="pill-icon">↩️</span>I'm not the right person</div>
+        <div class="pill" onclick="pickObj(this,'sonarqube')"><span class="pill-icon">⚙️</span>We use SonarQube</div>
+      </div>
+
+      <div class="sec">Or Type Your Own</div>
+      <div class="card">
+        <div class="form-group" style="margin-bottom:12px">
+          <textarea class="form-textarea" id="objInput" placeholder="Type the exact objection the prospect said..." rows="2"></textarea>
+        </div>
+        <button class="btn btn-primary" id="objBtn" onclick="runObj()">🛡️ Get Playbook Response</button>
+      </div>
+
+      <div class="ai-box" id="objBox">
+        <div class="ai-box-header">🛡️ Playbook Response</div>
+        <div class="ai-box-body" id="objOut"></div>
+      </div>
+    </div>
+
+    <!-- ══════════ EMAIL DRAFTER ══════════ -->
+    <div id="tab-email" class="tab-panel">
+      <div class="page-hd">
+        <h1>Email Drafter</h1>
+        <p>Fill in what you know — AI drafts a personalized email using your playbook templates.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Prospect Details</div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">First Name</label><input class="form-input" id="eName" placeholder="e.g. Sarah"></div>
+          <div class="form-group"><label class="form-label">Company</label><input class="form-input" id="eCompany" placeholder="e.g. JPMorgan"></div>
+          <div class="form-group"><label class="form-label">Title / Persona</label><input class="form-input" id="eTitle" placeholder="e.g. VP of Engineering"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Email Type</label>
+            <select class="form-select" id="eType">
+              <option value="cold_call_followup">Cold Call Follow-Up (asked for info)</option>
+              <option value="no_response">No Response Follow-Up</option>
+              <option value="invite">Demo Invite / Suggested Slot</option>
+              <option value="meeting_declined">Meeting Declined — Reschedule</option>
+              <option value="meeting_accepted">Meeting Accepted — Confirmation</option>
+              <option value="assistant_fwd">Via Assistant — Forward to Lead</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom:10px">
+          <label class="form-label">Call Notes</label>
+          <textarea class="form-textarea" id="eNotes" placeholder="e.g. Spoke briefly, mentioned long E2E cycles, interested in how SL works..." rows="2"></textarea>
+        </div>
+        <div class="form-group" style="margin-bottom:10px">
+          <label class="form-label">LinkedIn Bio (paste if available)</label>
+          <textarea class="form-textarea" id="eLinkedin" placeholder="Paste their LinkedIn headline or About section for a more personalized email..." rows="2"></textarea>
+        </div>
+        <div class="form-group" style="margin-bottom:14px">
+          <label class="form-label">Primary Pain Point</label>
+          <select class="form-select" id="ePain">
+            <option value="">Not sure</option>
+            <option>Long E2E / regression test cycles</option>
+            <option>Escaping defects / production bugs</option>
+            <option>Running all tests all the time</option>
+            <option>No visibility into untested code</option>
+            <option>High cost of testing</option>
+            <option>Manual testing bottleneck</option>
+            <option>AI / ML in testing interest</option>
+            <option>Executive visibility / quality metrics</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" id="emailBtn" onclick="runEmail()">✉️ Draft Email</button>
+      </div>
+
+      <div class="ai-box" id="emailBox">
+        <div class="ai-box-header">✉️ Draft Email</div>
+        <div class="ai-box-body" id="emailOut"></div>
+        <div class="copy-row"><button class="btn btn-ghost" onclick="copyText('emailOut',this)">📋 Copy to Clipboard</button></div>
+      </div>
+    </div>
+
+    <!-- ══════════ NEXT STEPS ══════════ -->
+    <div id="tab-nextsteps" class="tab-panel">
+      <div class="page-hd">
+        <h1>After-Call Next Steps</h1>
+        <p>What happened on the call? Get your exact next action from the playbook.</p>
+      </div>
+
+      <div class="sec">What Was the Call Outcome?</div>
+      <div class="card-grid" id="outcomeCards">
+        <div class="sel-card" onclick="pickOutcome(this,'connected_interested')"><div class="sel-card-icon">🟢</div><div class="sel-card-title">Connected — Interested</div></div>
+        <div class="sel-card" onclick="pickOutcome(this,'demo_scheduled')"><div class="sel-card-icon">📅</div><div class="sel-card-title">Demo Scheduled</div></div>
+        <div class="sel-card" onclick="pickOutcome(this,'followup_hangup')"><div class="sel-card-icon">📞</div><div class="sel-card-title">Follow-up (Hang-up)</div></div>
+        <div class="sel-card" onclick="pickOutcome(this,'not_interested')"><div class="sel-card-icon">🔴</div><div class="sel-card-title">Not Interested</div></div>
+        <div class="sel-card" onclick="pickOutcome(this,'no_answer')"><div class="sel-card-icon">📵</div><div class="sel-card-title">No Answer</div></div>
+        <div class="sel-card" onclick="pickOutcome(this,'meeting_declined')"><div class="sel-card-icon">❌</div><div class="sel-card-title">Meeting Declined</div></div>
+        <div class="sel-card" onclick="pickOutcome(this,'meeting_tentative')"><div class="sel-card-icon">❓</div><div class="sel-card-title">Meeting Tentative</div></div>
+        <div class="sel-card" onclick="pickOutcome(this,'meeting_proposed_new_time')"><div class="sel-card-icon">🔄</div><div class="sel-card-title">Proposed New Time</div></div>
+        <div class="sel-card" onclick="pickOutcome(this,'meeting_accepted')"><div class="sel-card-icon">✅</div><div class="sel-card-title">Meeting Accepted</div></div>
+      </div>
+
+      <div id="nsInputs" style="display:none">
+        <div class="sec">Add Context (Optional)</div>
+        <div class="card">
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Prospect Name</label><input class="form-input" id="nsName" placeholder="First name"></div>
+            <div class="form-group"><label class="form-label">Call Notes</label><input class="form-input" id="nsNotes" placeholder="e.g. asked to reschedule, has budget concerns..."></div>
+          </div>
+          <button class="btn btn-primary" id="nsBtn" onclick="runNextSteps()">📋 Get Next Steps</button>
+        </div>
+      </div>
+
+      <div class="ai-box" id="nsBox">
+        <div class="ai-box-header">📋 Your Next Steps</div>
+        <div class="ai-box-body" id="nsOut"></div>
+      </div>
+    </div>
+
+    <!-- ══════════ QUALIFICATION ══════════ -->
+    <div id="tab-qualify" class="tab-panel">
+      <div class="page-hd">
+        <h1>Lead Qualification</h1>
+        <p>ICP checklist, qualification questions, and AI-assisted lead analysis.</p>
+      </div>
+
+      <div class="sec">Inbound Lead Checklist</div>
+      <div class="card">
+        <ul class="checklist">
+          <li><span class="check-icon">🏢</span><div><strong>Tier 1 or Tier 2 account?</strong> — If not, don't book</div></li>
+          <li><span class="check-icon">💻</span><div><strong>Company develops software (not services)?</strong> — Software development services = don't book</div></li>
+          <li><span class="check-icon">🌍</span><div><strong>HQ in right territory?</strong> — No LATAM, APAC, EMEA, Middle East, India, Iran</div></li>
+          <li><span class="check-icon">⚡</span><div><strong>No existing S3/S4/S5 opportunity?</strong> — Check Triforce first</div></li>
+          <li><span class="check-icon">👤</span><div><strong>ICP persona?</strong> — Director and above. No SAP/ABAP/S4HANA, no Low Level, no consultants</div></li>
+          <li><span class="check-icon">🏭</span><div><strong>Valid industry?</strong> — Not: Business Services, Education, Churches, Non-Profit, Consultants, Government</div></li>
+          <li><span class="check-icon">📧</span><div><strong>Not a Tricentis employee?</strong> — No @tricentis.com email</div></li>
+          <li><span class="check-icon">📊</span><div><strong>SeaLights ARR is 0 or blank?</strong> — If already a customer, check with Adi</div></li>
+        </ul>
+      </div>
+
+      <div class="sec">Qualification Questions to Ask on Call</div>
+      <div class="card">
+        <ul class="checklist">
+          <li><span class="check-icon">🔤</span><div><strong>Programming languages</strong> — "What are the primary programming languages used in your inhouse applications?"</div></li>
+          <li><span class="check-icon">🏗️</span><div><strong>Inhouse vs outsourced</strong> — "They are developed inhouse right? Nothing outsourced?"</div></li>
+          <li><span class="check-icon">⏱️</span><div><strong>Primary interest</strong> — "Would you be looking to reduce time? Improve quality? Reduce the cost of testing altogether?"</div></li>
+          <li><span class="check-icon">⏳</span><div><strong>Test cycle time</strong> — "How long does it usually take to run a full suite of E2E or regression tests?"</div></li>
+          <li><span class="check-icon">🔁</span><div><strong>Run all tests?</strong> — "Do you run ALL of your tests ALL the time?"</div></li>
+          <li><span class="check-icon">🛡️</span><div><strong>Escaping defects</strong> — "Do you have issues with escaping defects or untested code reaching production?"</div></li>
+          <li><span class="check-icon">🏢</span><div><strong>Team structure</strong> — "Do you have a separate QA team or do engineers handle QA?"</div></li>
+        </ul>
+      </div>
+
+      <div class="sec">AI Qualification Helper</div>
+      <div class="card">
+        <div class="form-group" style="margin-bottom:12px">
+          <label class="form-label">Describe the lead</label>
+          <textarea class="form-textarea" id="qualInput" placeholder="e.g. Director of QA at a US fintech company, 500 employees, long regression cycles, runs everything manually, uses Java and Python." rows="3"></textarea>
+        </div>
+        <button class="btn btn-primary" id="qualBtn" onclick="runQualify()">✅ Should I Book This Lead?</button>
+        <div class="ai-box" id="qualBox" style="margin-top:14px">
+          <div class="ai-box-header">✅ Qualification Analysis</div>
+          <div class="ai-box-body" id="qualOut"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ DISPOS ══════════ -->
+    <div id="tab-dispos" class="tab-panel">
+      <div class="page-hd">
+        <h1>Cadence Dispositions</h1>
+        <p>Use these dispo reasons in SalesLoft after every connected call.</p>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Dispo Reason</th><th>Description</th><th>Code</th><th>Type</th></tr></thead>
+          <tbody>
+            <tr><td>Not Interested Now</td><td>Relevant person, not interested at the moment</td><td>SeaLights NIN</td><td><span class="badge badge-red">No Interest</span></td></tr>
+            <tr><td>Irrelevant Territory</td><td>Relevant person but wrong territory (India, Iran, etc.)</td><td>SeaLights IT</td><td><span class="badge badge-yellow">Contact Bad Fit</span></td></tr>
+            <tr><td>Too Low Level</td><td>Relevant person but too low level (manager, engineer)</td><td>SeaLights TLL</td><td><span class="badge badge-yellow">Contact Bad Fit</span></td></tr>
+            <tr><td>Irrelevant Persona</td><td>Not related to software at all</td><td>SeaLights IP</td><td><span class="badge badge-yellow">Contact Bad Fit</span></td></tr>
+            <tr><td>Company Too Small</td><td>Relevant person but company too small</td><td>SeaLights CTS</td><td><span class="badge badge-yellow">Contact Bad Fit</span></td></tr>
+            <tr><td>Too Immature</td><td>No CI/CD, not enough dev, new teams</td><td>SeaLights TI</td><td><span class="badge badge-red">No Interest</span></td></tr>
+            <tr><td>Tech Stack Not Supported</td><td>Not Java, .NET, C#, C++, etc.</td><td>SeaLights TSNS</td><td><span class="badge badge-yellow">Company Bad Fit</span></td></tr>
+            <tr><td>Irrelevant Company</td><td>Irrelevant industry / territory / blacklist</td><td>SeaLights IC</td><td><span class="badge badge-yellow">Company Bad Fit</span></td></tr>
+            <tr><td>Follow-up — Hang-up</td><td>Didn't hear the pitch, want to reconnect</td><td>SeaLights FUHU</td><td><span class="badge badge-blue">Followup</span></td></tr>
+            <tr><td>Follow-up — Interested</td><td>Heard the pitch and is interested</td><td>SeaLights FUI</td><td><span class="badge badge-blue">Followup</span></td></tr>
+            <tr><td>Demo Scheduled</td><td>Meeting is booked</td><td>SeaLights DS</td><td><span class="badge badge-green">🎉 Booked</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sec" style="margin-top:24px">Inbound Emojis (Slack Channel)</div>
+      <div class="card">
+        <ul class="checklist">
+          <li><span class="check-icon">👍</span><div><strong>Claim</strong> — Reply "ME" — who catches first</div></li>
+          <li><span class="check-icon">❌</span><div><strong>Unqualified</strong> — Mention why: Low Level / Irrelevant Prospect / Company Bad Fit</div></li>
+          <li><span class="check-icon">❤️</span><div><strong>Qualified</strong></div></li>
+          <li><span class="check-icon">✅</span><div><strong>Booked</strong></div></li>
+          <li><span class="check-icon">🚫</span><div><strong>No Phone</strong> — Pass back to Yulia for review</div></li>
+        </ul>
+      </div>
+    </div>
+
+  </main>
 </div>
 
-<nav class="nav">
-  <div class="nav-tab active" onclick="showTab('dashboard')"><span class="tab-icon">🏠</span>Dashboard</div>
-  <div class="nav-tab" onclick="showTab('scripts')"><span class="tab-icon">📞</span>Call Scripts</div>
-  <div class="nav-tab" onclick="showTab('objections')"><span class="tab-icon">🛡️</span>Objection Handler</div>
-  <div class="nav-tab" onclick="showTab('email')"><span class="tab-icon">✉️</span>Email Drafter</div>
-  <div class="nav-tab" onclick="showTab('nextsteps')"><span class="tab-icon">📋</span>Next Steps</div>
-  <div class="nav-tab" onclick="showTab('qualify')"><span class="tab-icon">✅</span>Qualification</div>
-  <div class="nav-tab" onclick="showTab('dispos')"><span class="tab-icon">🗂️</span>Dispos</div>
-</nav>
-
-<!-- ======================== DASHBOARD ======================== -->
-<div class="main">
-<div id="tab-dashboard" class="tab-content active">
-  <div class="page-title">Good to see you 👋</div>
-  <div class="page-sub">Your SeaLights BDR Playbook — all scripts, objections & tools in one place.</div>
-
-  <div class="dash-grid">
-    <div class="dash-stat"><div class="dash-stat-val">12</div><div class="dash-stat-label">Objection Responses</div></div>
-    <div class="dash-stat"><div class="dash-stat-val">8</div><div class="dash-stat-label">Call Scripts</div></div>
-    <div class="dash-stat"><div class="dash-stat-val">5</div><div class="dash-stat-label">Email Templates</div></div>
-  </div>
-
-  <div class="section-label">Quick Access</div>
-  <div class="quick-links">
-    <div class="quick-link" onclick="showTab('scripts')">
-      <div class="quick-link-icon">📞</div>
-      <div>
-        <div class="quick-link-title">Call Scripts</div>
-        <div class="quick-link-desc">Barbara script, inbound scripts, AI feature pitch</div>
-      </div>
-    </div>
-    <div class="quick-link" onclick="showTab('objections')">
-      <div class="quick-link-icon">🛡️</div>
-      <div>
-        <div class="quick-link-title">Handle an Objection</div>
-        <div class="quick-link-desc">Budget, inhouse tool, wrong person & more</div>
-      </div>
-    </div>
-    <div class="quick-link" onclick="showTab('email')">
-      <div class="quick-link-icon">✉️</div>
-      <div>
-        <div class="quick-link-title">Draft an Email</div>
-        <div class="quick-link-desc">Personalized from call notes + LinkedIn</div>
-      </div>
-    </div>
-    <div class="quick-link" onclick="showTab('nextsteps')">
-      <div class="quick-link-icon">📋</div>
-      <div>
-        <div class="quick-link-title">After-Call Next Steps</div>
-        <div class="quick-link-desc">What to do after any call outcome</div>
-      </div>
-    </div>
-    <div class="quick-link" onclick="showTab('qualify')">
-      <div class="quick-link-icon">✅</div>
-      <div>
-        <div class="quick-link-title">Qualify a Lead</div>
-        <div class="quick-link-desc">ICP checklist + qualification questions</div>
-      </div>
-    </div>
-    <div class="quick-link" onclick="openSettings()">
-      <div class="quick-link-icon">⚙️</div>
-      <div>
-        <div class="quick-link-title">Setup API Key</div>
-        <div class="quick-link-desc">Connect Gemini to power AI responses</div>
-      </div>
-    </div>
-  </div>
-
-  <div style="margin-top:28px">
-  <div class="section-label">Supported Tech Stack</div>
-  <div class="card">
-    <div style="display:flex;gap:24px;flex-wrap:wrap">
-      <div>
-        <div style="font-size:11px;color:var(--success);font-weight:700;text-transform:uppercase;margin-bottom:8px">✅ We Support</div>
-        <div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--text-dim);line-height:2">Java · JavaScript · Angular · React · TypeScript · NodeJS · Scala · Python · C# · .NET · Go · C++ (GCC) · C (GCC)</div>
-      </div>
-      <div>
-        <div style="font-size:11px;color:var(--accent);font-weight:700;text-transform:uppercase;margin-bottom:8px">❌ Not Supported</div>
-        <div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--text-dim);line-height:2">Mobile (iOS/Android) · Salesforce · Ruby · Oracle · PHP · HTML · Linux</div>
-      </div>
-    </div>
-  </div>
-  </div>
-</div>
-
-<!-- ======================== CALL SCRIPTS ======================== -->
-<div id="tab-scripts" class="tab-content">
-  <div class="page-title">Call Scripts</div>
-  <div class="page-sub">Select a script type to get the full script or ask the AI to adapt it.</div>
-
-  <div class="section-label">Choose a Script</div>
-  <div class="script-grid">
-    <div class="script-card" onclick="selectScript(this,'cold_call')">
-      <div class="script-card-icon">🧊</div>
-      <div class="script-card-title">Cold Call — Barbara Script</div>
-      <div class="script-card-desc">Standard outbound cold call with pitch and CTA options</div>
-    </div>
-    <div class="script-card" onclick="selectScript(this,'short_advanced')">
-      <div class="script-card-icon">⚡</div>
-      <div class="script-card-title">Short & Focused (Advanced)</div>
-      <div class="script-card-desc">Concise pitch focused on AI capabilities and quality gates</div>
-    </div>
-    <div class="script-card" onclick="selectScript(this,'wp_script')">
-      <div class="script-card-icon">📄</div>
-      <div class="script-card-title">White Paper Download Script</div>
-      <div class="script-card-desc">For prospects who downloaded a WP or watched a demo video</div>
-    </div>
-    <div class="script-card" onclick="selectScript(this,'ai_feature')">
-      <div class="script-card-icon">🤖</div>
-      <div class="script-card-title">AI Feature Script</div>
-      <div class="script-card-desc">Highlighting AI test generation and code-to-test mapping</div>
-    </div>
-    <div class="script-card" onclick="selectScript(this,'zoom_qual')">
-      <div class="script-card-icon">🎥</div>
-      <div class="script-card-title">Zoom Qualification Script</div>
-      <div class="script-card-desc">Full script for scheduled qualification calls over Zoom</div>
-    </div>
-    <div class="script-card" onclick="selectScript(this,'demo_handoff')">
-      <div class="script-card-icon">🤝</div>
-      <div class="script-card-title">Demo Handoff to AE</div>
-      <div class="script-card-desc">Opening the demo session and handing off to AE</div>
-    </div>
-    <div class="script-card" onclick="selectScript(this,'dev_magic')">
-      <div class="script-card-icon">💻</div>
-      <div class="script-card-title">Magic Paragraph — Dev/Eng</div>
-      <div class="script-card-desc">Tailored pitch for engineering/dev personas</div>
-    </div>
-    <div class="script-card" onclick="selectScript(this,'qa_magic')">
-      <div class="script-card-icon">🔍</div>
-      <div class="script-card-title">Magic Paragraph — QA/QE</div>
-      <div class="script-card-desc">Tailored pitch for QA/QE personas</div>
-    </div>
-  </div>
-
-  <div id="scriptCustomInput" style="display:none;">
-    <div class="section-label">Customize (Optional)</div>
-    <div class="row">
-      <div class="form-group">
-        <label class="form-label">Prospect Name</label>
-        <input class="form-input" id="scriptProspect" placeholder="e.g. John Smith">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Company</label>
-        <input class="form-input" id="scriptCompany" placeholder="e.g. Acme Corp">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Persona</label>
-        <select class="form-select" id="scriptPersona">
-          <option value="">Select...</option>
-          <option>VP of Engineering</option>
-          <option>Director of QA</option>
-          <option>QE Manager</option>
-          <option>CTO</option>
-          <option>Engineering Manager</option>
-        </select>
-      </div>
-    </div>
-    <button class="btn btn-primary" style="margin-top:14px" onclick="getScript()">🎯 Get Script</button>
-  </div>
-
-  <div class="ai-box" id="scriptResult">
-    <div class="ai-header">📋 Playbook Script</div>
-    <div class="ai-content" id="scriptContent"></div>
-  </div>
-</div>
-
-<!-- ======================== OBJECTION HANDLER ======================== -->
-<div id="tab-objections" class="tab-content">
-  <div class="page-title">Objection Handler</div>
-  <div class="page-sub">Select an objection or type your own — get the exact playbook response.</div>
-
-  <div class="section-label">Common Objections</div>
-  <div class="objection-list">
-    <div class="obj-pill" onclick="selectObjPill(this,'send_email')"><span class="obj-pill-icon">📧</span>Send me an email</div>
-    <div class="obj-pill" onclick="selectObjPill(this,'inhouse_solution')"><span class="obj-pill-icon">🏠</span>We have an inhouse solution</div>
-    <div class="obj-pill" onclick="selectObjPill(this,'already_tool')"><span class="obj-pill-icon">🔧</span>We already have a tool</div>
-    <div class="obj-pill" onclick="selectObjPill(this,'no_budget')"><span class="obj-pill-icon">💸</span>We don't have budget</div>
-    <div class="obj-pill" onclick="selectObjPill(this,'not_dm')"><span class="obj-pill-icon">👤</span>I'm not a DM</div>
-    <div class="obj-pill" onclick="selectObjPill(this,'not_relevant')"><span class="obj-pill-icon">🚫</span>Not relevant / not our focus</div>
-    <div class="obj-pill" onclick="selectObjPill(this,'how_does_it_work')"><span class="obj-pill-icon">❓</span>How does it work?</div>
-    <div class="obj-pill" onclick="selectObjPill(this,'not_qa')"><span class="obj-pill-icon">🤷</span>I don't handle QA</div>
-    <div class="obj-pill" onclick="selectObjPill(this,'tricentis_existing')"><span class="obj-pill-icon">🔗</span>We already use Tricentis</div>
-    <div class="obj-pill" onclick="selectObjPill(this,'clevel_exec')"><span class="obj-pill-icon">👔</span>High-Level Exec / C-Level</div>
-    <div class="obj-pill" onclick="selectObjPill(this,'not_right_person')"><span class="obj-pill-icon">↩️</span>I'm not the right person</div>
-    <div class="obj-pill" onclick="selectObjPill(this,'sonarqube')"><span class="obj-pill-icon">⚙️</span>We use SonarQube / already have coverage</div>
-  </div>
-
-  <div class="section-label">Or Type Your Own</div>
-  <div class="form-group" style="margin-bottom:14px">
-    <textarea class="form-textarea" id="customObjection" placeholder="Type the exact objection the prospect said..." rows="2"></textarea>
-  </div>
-  <button class="btn btn-primary" onclick="handleObjection()">🛡️ Get Playbook Response</button>
-
-  <div class="ai-box" id="objectionResult">
-    <div class="ai-header">🛡️ Playbook Response</div>
-    <div class="ai-content" id="objectionContent"></div>
-  </div>
-</div>
-
-<!-- ======================== EMAIL DRAFTER ======================== -->
-<div id="tab-email" class="tab-content">
-  <div class="page-title">Email Drafter</div>
-  <div class="page-sub">Fill in what you know — AI drafts a personalized email using your playbook templates.</div>
-
-  <div class="card">
-    <div class="card-title">Prospect Details</div>
-    <div class="row" style="margin-bottom:14px">
-      <div class="form-group">
-        <label class="form-label">Prospect First Name</label>
-        <input class="form-input" id="emailName" placeholder="e.g. Sarah">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Company</label>
-        <input class="form-input" id="emailCompany" placeholder="e.g. JPMorgan Chase">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Title / Persona</label>
-        <input class="form-input" id="emailTitle" placeholder="e.g. VP of Engineering">
-      </div>
-    </div>
-    <div class="row" style="margin-bottom:14px">
-      <div class="form-group">
-        <label class="form-label">Email Type</label>
-        <select class="form-select" id="emailType">
-          <option value="cold_call_followup">Cold Call Follow-Up (asked for info)</option>
-          <option value="no_response">No Response Follow-Up</option>
-          <option value="invite">Demo Invite / Suggested Slot</option>
-          <option value="meeting_declined">Meeting Declined — Reschedule</option>
-          <option value="meeting_accepted">Meeting Accepted — Confirmation</option>
-          <option value="assistant_fwd">Via Assistant — Forward to Lead</option>
-        </select>
-      </div>
-    </div>
-    <div class="form-group" style="margin-bottom:14px">
-      <label class="form-label">Call Notes (what did you discuss?)</label>
-      <textarea class="form-textarea" id="emailCallNotes" placeholder="e.g. Spoke briefly, mentioned they run all tests all the time, long E2E cycles, interested in seeing how SL works, asked for more info..." rows="3"></textarea>
-    </div>
-    <div class="form-group" style="margin-bottom:14px">
-      <label class="form-label">LinkedIn Bio / About Section (paste if available)</label>
-      <textarea class="form-textarea" id="emailLinkedin" placeholder="Paste their LinkedIn headline or About section here for a more personalized email..." rows="3"></textarea>
-    </div>
-    <div class="form-group" style="margin-bottom:20px">
-      <label class="form-label">Primary Pain Point Identified</label>
-      <select class="form-select" id="emailPain">
-        <option value="">Not sure</option>
-        <option>Long E2E / regression test cycles</option>
-        <option>Escaping defects / production bugs</option>
-        <option>Running all tests all the time</option>
-        <option>No visibility into untested code</option>
-        <option>High cost of testing</option>
-        <option>Manual testing bottleneck</option>
-        <option>AI / ML in testing interest</option>
-        <option>Executive visibility / quality metrics</option>
-      </select>
-    </div>
-    <button class="btn btn-primary" onclick="draftEmail()">✉️ Draft Email</button>
-  </div>
-
-  <div class="ai-box" id="emailResult">
-    <div class="ai-header">✉️ Draft Email</div>
-    <div class="ai-content" id="emailContent"></div>
-    <div style="margin-top:14px;display:flex;gap:10px" id="emailActions" style="display:none">
-      <button class="btn btn-secondary" onclick="copyEmail()">📋 Copy to Clipboard</button>
-    </div>
-  </div>
-</div>
-
-<!-- ======================== NEXT STEPS ======================== -->
-<div id="tab-nextsteps" class="tab-content">
-  <div class="page-title">After-Call Next Steps</div>
-  <div class="page-sub">What happened on the call? Get your exact next action from the playbook.</div>
-
-  <div class="section-label">What Was the Call Outcome?</div>
-  <div class="outcome-grid">
-    <div class="outcome-btn" onclick="selectOutcome(this,'connected_interested')">
-      <div class="outcome-btn-icon">🟢</div>
-      <div class="outcome-btn-label">Connected — Interested</div>
-    </div>
-    <div class="outcome-btn" onclick="selectOutcome(this,'demo_scheduled')">
-      <div class="outcome-btn-icon">📅</div>
-      <div class="outcome-btn-label">Demo Scheduled</div>
-    </div>
-    <div class="outcome-btn" onclick="selectOutcome(this,'followup_hangup')">
-      <div class="outcome-btn-icon">📞</div>
-      <div class="outcome-btn-label">Follow-up (Hang-up)</div>
-    </div>
-    <div class="outcome-btn" onclick="selectOutcome(this,'not_interested')">
-      <div class="outcome-btn-icon">🔴</div>
-      <div class="outcome-btn-label">Not Interested</div>
-    </div>
-    <div class="outcome-btn" onclick="selectOutcome(this,'no_answer')">
-      <div class="outcome-btn-icon">📵</div>
-      <div class="outcome-btn-label">No Answer</div>
-    </div>
-    <div class="outcome-btn" onclick="selectOutcome(this,'meeting_declined')">
-      <div class="outcome-btn-icon">❌</div>
-      <div class="outcome-btn-label">Meeting Declined</div>
-    </div>
-    <div class="outcome-btn" onclick="selectOutcome(this,'meeting_tentative')">
-      <div class="outcome-btn-icon">❓</div>
-      <div class="outcome-btn-label">Meeting Tentative</div>
-    </div>
-    <div class="outcome-btn" onclick="selectOutcome(this,'meeting_proposed_new_time')">
-      <div class="outcome-btn-icon">🔄</div>
-      <div class="outcome-btn-label">Proposed New Time</div>
-    </div>
-    <div class="outcome-btn" onclick="selectOutcome(this,'meeting_accepted')">
-      <div class="outcome-btn-icon">✅</div>
-      <div class="outcome-btn-label">Meeting Accepted</div>
-    </div>
-  </div>
-
-  <div id="nextStepsContext" style="display:none;">
-    <div class="section-label">Add Context (Optional)</div>
-    <div class="row">
-      <div class="form-group">
-        <label class="form-label">Prospect Name</label>
-        <input class="form-input" id="nsProspect" placeholder="First name">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Any notes from the call?</label>
-        <input class="form-input" id="nsNotes" placeholder="e.g. asked to reschedule, has budget concerns...">
-      </div>
-    </div>
-    <button class="btn btn-primary" style="margin-top:14px" onclick="getNextSteps()">📋 Get Next Steps</button>
-  </div>
-
-  <div class="ai-box" id="nextStepsResult">
-    <div class="ai-header">📋 Your Next Steps</div>
-    <div class="ai-content" id="nextStepsContent"></div>
-  </div>
-</div>
-
-<!-- ======================== QUALIFICATION ======================== -->
-<div id="tab-qualify" class="tab-content">
-  <div class="page-title">Lead Qualification</div>
-  <div class="page-sub">ICP checklist, qualification questions, and inbound rules.</div>
-
-  <div class="section-label">Inbound Lead Checklist</div>
-  <div class="card">
-    <ul class="checklist">
-      <li><span class="check-icon">🏢</span><div><strong>Tier 1 or Tier 2 account?</strong> — If not, don't book</div></li>
-      <li><span class="check-icon">💻</span><div><strong>Company develops software (not services)?</strong> — If they offer software development services, don't book</div></li>
-      <li><span class="check-icon">🌍</span><div><strong>HQ in right territory?</strong> — No LATAM, APAC, EMEA, Middle East, India, Iran</div></li>
-      <li><span class="check-icon">⚡</span><div><strong>No existing S3/S4/S5 opportunity?</strong> — Check Triforce first</div></li>
-      <li><span class="check-icon">👤</span><div><strong>ICP persona?</strong> — Director and above. No SAP/ABAP/S4HANA, no Low Level (managers, engineers), no consultants</div></li>
-      <li><span class="check-icon">🏭</span><div><strong>Valid industry?</strong> — Not: Business Services, Education, Churches, Non-Profit, Consultants, Government</div></li>
-      <li><span class="check-icon">📧</span><div><strong>Not a Tricentis employee?</strong> — No @tricentis.com email</div></li>
-      <li><span class="check-icon">📊</span><div><strong>SeaLights ARR is 0 or blank?</strong> — If they're already a customer, check with Adi</div></li>
-    </ul>
-  </div>
-
-  <div class="section-label">Qualification Questions to Ask on Call</div>
-  <div class="card">
-    <ul class="checklist">
-      <li><span class="check-icon">🔤</span><div><strong>Programming languages</strong> — "What are the primary programming languages used in your inhouse applications?"</div></li>
-      <li><span class="check-icon">🏗️</span><div><strong>Inhouse vs outsourced</strong> — "They are developed inhouse right? Nothing outsourced?"</div></li>
-      <li><span class="check-icon">⏱️</span><div><strong>Primary interest</strong> — "Would you be looking to reduce time? Improve quality? Reduce the cost of testing altogether?"</div></li>
-      <li><span class="check-icon">⏳</span><div><strong>Test cycle time</strong> — "How long does it usually take to run a full suite of E2E or regression tests?"</div></li>
-      <li><span class="check-icon">🔁</span><div><strong>Run all tests?</strong> — "Do you run ALL of your tests ALL the time?"</div></li>
-      <li><span class="check-icon">🛡️</span><div><strong>Escaping defects</strong> — "Do you have issues with escaping defects or untested code reaching production?"</div></li>
-      <li><span class="check-icon">🏢</span><div><strong>Team structure</strong> — "Do you have a separate QA team or do engineers handle QA?"</div></li>
-    </ul>
-  </div>
-
-  <div class="section-label">AI Qualification Helper</div>
-  <div class="card">
-    <div class="form-group" style="margin-bottom:14px">
-      <label class="form-label">Describe the lead (title, company, what they said...)</label>
-      <textarea class="form-textarea" id="qualifyInput" placeholder="e.g. Director of QA at a fintech company in the US, 500 person company, mentioned they have long regression cycles and run everything manually. Uses Java and Python." rows="3"></textarea>
-    </div>
-    <button class="btn btn-primary" onclick="qualifyLead()">✅ Should I Book This Lead?</button>
-    <div class="ai-box" id="qualifyResult" style="margin-top:14px">
-      <div class="ai-header">✅ Qualification Analysis</div>
-      <div class="ai-content" id="qualifyContent"></div>
-    </div>
-  </div>
-</div>
-
-<!-- ======================== DISPOS ======================== -->
-<div id="tab-dispos" class="tab-content">
-  <div class="page-title">Cadence Dispositions</div>
-  <div class="page-sub">Use these dispo reasons in SalesLoft after every connected call.</div>
-
-  <div class="card" style="padding:0;overflow:hidden">
-    <table class="dispo-table">
-      <thead>
-        <tr>
-          <th>Dispo Reason</th>
-          <th>Description</th>
-          <th>Code</th>
-          <th>Type</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>Not Interested Now</td><td>Relevant person, not interested at the moment</td><td>SeaLights NIN</td><td><span class="badge badge-red">No Interest</span></td></tr>
-        <tr><td>Irrelevant Territory</td><td>Relevant person but in irrelevant territory (India, Iran, etc.)</td><td>SeaLights IT</td><td><span class="badge badge-yellow">Contact Bad Fit</span></td></tr>
-        <tr><td>Too Low Level</td><td>Relevant person but too low level (manager, engineer)</td><td>SeaLights TLL</td><td><span class="badge badge-yellow">Contact Bad Fit</span></td></tr>
-        <tr><td>Irrelevant Persona</td><td>Not related to software at all (food engineering, machinery...)</td><td>SeaLights IP</td><td><span class="badge badge-yellow">Contact Bad Fit</span></td></tr>
-        <tr><td>Company Too Small</td><td>Relevant person but company too small</td><td>SeaLights CTS</td><td><span class="badge badge-yellow">Contact Bad Fit</span></td></tr>
-        <tr><td>Too Immature</td><td>No CI/CD, not enough dev, new teams</td><td>SeaLights TI</td><td><span class="badge badge-red">No Interest</span></td></tr>
-        <tr><td>Tech Stack Not Supported</td><td>Not Java, .NET, C#, C++, etc.</td><td>SeaLights TSNS</td><td><span class="badge badge-yellow">Company Bad Fit</span></td></tr>
-        <tr><td>Irrelevant Company</td><td>Irrelevant industry / territory / blacklist</td><td>SeaLights IC</td><td><span class="badge badge-yellow">Company Bad Fit</span></td></tr>
-        <tr><td>Follow-up — Hang-up</td><td>Didn't hear the pitch, want to reconnect</td><td>SeaLights FUHU</td><td><span class="badge badge-blue">Followup</span></td></tr>
-        <tr><td>Follow-up — Interested</td><td>Heard the pitch and is interested</td><td>SeaLights FUI</td><td><span class="badge badge-blue">Followup</span></td></tr>
-        <tr><td>Demo Scheduled</td><td>Meeting is booked</td><td>SeaLights DS</td><td><span class="badge badge-green">🎉 Booked</span></td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div style="margin-top:24px">
-  <div class="section-label">Inbound Emojis (Slack Channel)</div>
-  <div class="card">
-    <ul class="checklist">
-      <li><span class="check-icon">👍</span><div><strong>Claim</strong> — Reply "ME" — who catches first</div></li>
-      <li><span class="check-icon">❌</span><div><strong>Unqualified</strong> — Mention why: Low Level / Irrelevant Prospect / Company Bad Fit</div></li>
-      <li><span class="check-icon">❤️</span><div><strong>Qualified</strong></div></li>
-      <li><span class="check-icon">✅</span><div><strong>Booked</strong></div></li>
-      <li><span class="check-icon">🚫</span><div><strong>No Phone</strong> — Pass back to Yulia for review</div></li>
-    </ul>
-  </div>
-  </div>
-</div>
-</div>
-
-<!-- ======================== SETTINGS MODAL ======================== -->
-<div class="modal-overlay" id="settingsModal">
+<!-- ══════════ SETTINGS MODAL ══════════ -->
+<div class="modal-bg" id="settingsModal">
   <div class="modal">
-    <div class="modal-title">⚙️ API Setup</div>
-    <div class="modal-desc">Connect your free Gemini API key to power all AI responses.</div>
-    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:16px;font-size:12px;line-height:1.9;color:var(--text-dim)">
-      <strong style="color:var(--text)">How to get your free key (2 min):</strong><br>
-      1. Go to <strong style="color:var(--accent3)">aistudio.google.com</strong><br>
+    <h2>⚙️ Connect Gemini API</h2>
+    <p>Your key is stored only in this browser — never sent anywhere except directly to Google's API.</p>
+    <div class="how-to">
+      <strong>Get your free key in 2 minutes:</strong><br>
+      1. Go to <strong><a href="https://aistudio.google.com" target="_blank">aistudio.google.com</a></strong><br>
       2. Sign in with your Google account<br>
-      3. Click <strong>"Get API Key"</strong> then <strong>"Create API key"</strong><br>
+      3. Click <strong>"Get API Key"</strong> → <strong>"Create API key"</strong><br>
       4. Copy and paste it below
     </div>
-    <div class="form-group" style="margin-bottom:10px">
+    <div class="form-group" style="margin-bottom:8px">
       <label class="form-label">Gemini API Key</label>
-      <input class="form-input" id="apiKeyInput" type="text" placeholder="AIza...">
+      <input class="form-input" id="apiKeyInput" type="password" placeholder="AIza...">
     </div>
-    <div id="testResult" style="font-size:12px;margin-bottom:10px;min-height:18px"></div>
-    <div class="warning">🔒 Your key is saved only in <strong>this browser</strong> — never sent anywhere except Google's API directly. Free tier = 1,500 requests/day.</div>
-    <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="testApiKey()">🧪 Test Key</button>
-      <button class="btn btn-secondary" onclick="closeSettings()">Cancel</button>
-      <button class="btn btn-primary" onclick="saveApiKey()">Save Key</button>
+    <div class="test-msg" id="testMsg"></div>
+    <div class="info-box">🔒 Free tier = up to 1,500 requests/day. Key resets every 24 hours.</div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="testKey()">🧪 Test Key</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveKey()">Save &amp; Connect</button>
     </div>
   </div>
 </div>
 
 <script>
-// ======= PLAYBOOK KNOWLEDGE BASE =======
+// ─────────────────────────────────────────────
+// PLAYBOOK KNOWLEDGE BASE
+// ─────────────────────────────────────────────
 const PLAYBOOK = `
 SEALIGHTS BDR PLAYBOOK — FULL KNOWLEDGE BASE
 
@@ -967,10 +1115,10 @@ Subject: Reduce testing cycle time without compromising quality
 It was a pleasure speaking with you today, I hope we reconnect soon.
 Tricentis SeaLights is a next-generation Quality Intelligence platform designed for enterprise quality engineering teams. It empowers Dev and QA teams to accelerate testing cycles and increase quality.
 SeaLights capabilities:
-• Test impact analytics - Auto-select and execute only the critical tests related to code changes for every test type and stage.
-• Test gap analytics - Block untested code changes from reaching production.
-• Generate tests with AI: SeaLights uses AI to automatically generate tests for untested code changes, based on the context of each user story.
-• Advanced code coverage - Gain comprehensive code coverage for every test type
+- Test impact analytics - Auto-select and execute only the critical tests related to code changes for every test type and stage.
+- Test gap analytics - Block untested code changes from reaching production.
+- Generate tests with AI: SeaLights uses AI to automatically generate tests for untested code changes, based on the context of each user story.
+- Advanced code coverage - Gain comprehensive code coverage for every test type
 5-minute overview: https://tricentis-video.wistia.com/medias/xkidbjli0a
 I'd appreciate the opportunity to showcase our solution in a short demonstration with one of my executives.
 Best,"
@@ -984,10 +1132,10 @@ Subject: [Company] <> SeaLights | Introduction
 "Hi [Name], to follow up on our previous conversation - I set a tentative slot for us to showcase SeaLights for your quality initiatives and leveraging AI within your processes. I hope this works for you!
 Watch a 5-minute overview of Tricentis SeaLights: https://tricentis-video.wistia.com/medias/xkidbjli0a
 In this session, we will cover how SeaLights Quality Intelligence Platform can help with:
-• Generate missing tests with AI
-• Reduce long & expensive testing cycles (save up to 90% of release cycle time)
-• Minimize production defects
-• Focus your organizational quality strategy
+- Generate missing tests with AI
+- Reduce long & expensive testing cycles (save up to 90% of release cycle time)
+- Minimize production defects
+- Focus your organizational quality strategy
 Best regards,"
 
 MEETING DECLINED FOLLOW-UP:
@@ -1097,267 +1245,262 @@ Telecom, Software: Sophos, Global Payments, Veeva, ADP
 Energy: GE Vernova | Medical: GE Healthcare | Media: Pluto TV (Paramount)
 `;
 
-// ======= STATE =======
-let selectedScript = '';
-let selectedObjection = '';
-let selectedOutcome = '';
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+let activeScript = '';
+let activeOutcome = '';
 
-// ======= API KEY MANAGEMENT =======
-function openSettings() {
+// ─────────────────────────────────────────────
+// API KEY
+// ─────────────────────────────────────────────
+function updateStatus() {
+  const key = localStorage.getItem('sl_api_key');
+  const dot = document.getElementById('statusDot');
+  const txt = document.getElementById('statusText');
+  if (key) { dot.classList.add('on'); txt.textContent = 'API Connected'; }
+  else { dot.classList.remove('on'); txt.textContent = 'Connect API Key'; }
+}
+updateStatus();
+
+function openModal() {
   document.getElementById('settingsModal').classList.add('open');
-  const saved = localStorage.getItem('sl_gemini_key');
-  if (saved) document.getElementById('apiKeyInput').value = saved;
+  const k = localStorage.getItem('sl_api_key');
+  if (k) document.getElementById('apiKeyInput').value = k;
 }
-function closeSettings() {
-  document.getElementById('settingsModal').classList.remove('open');
+function closeModal() { document.getElementById('settingsModal').classList.remove('open'); }
+
+function saveKey() {
+  const k = document.getElementById('apiKeyInput').value.trim();
+  if (!k) { alert('Please enter a key.'); return; }
+  localStorage.setItem('sl_api_key', k);
+  updateStatus();
+  closeModal();
 }
-function saveApiKey() {
-  const key = document.getElementById('apiKeyInput').value.trim();
-  if (!key) return alert('Please enter a valid API key.');
-  localStorage.setItem('sl_gemini_key', key);
-  updateApiStatus();
-  closeSettings();
-}
-async function testApiKey() {
-  const key = document.getElementById('apiKeyInput').value.trim();
-  const resultEl = document.getElementById('testResult');
-  if (!key) { resultEl.innerHTML = '<span style="color:var(--accent)">Please enter a key first.</span>'; return; }
-  resultEl.innerHTML = '<span style="color:var(--text-dim)">Testing connection...</span>';
+
+async function testKey() {
+  const k = document.getElementById('apiKeyInput').value.trim();
+  const msg = document.getElementById('testMsg');
+  if (!k) { msg.innerHTML = '<span style="color:var(--accent)">Enter a key first.</span>'; return; }
+  msg.innerHTML = '<span style="color:var(--text-dim)">Testing...</span>';
   try {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`;
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: 'Say only: OK' }] }], generationConfig: { maxOutputTokens: 5 } })
-    });
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${k}`,
+      { method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ contents:[{role:'user',parts:[{text:'Say only: OK'}]}], generationConfig:{maxOutputTokens:5} }) }
+    );
     if (res.ok) {
-      resultEl.innerHTML = '<span style="color:var(--success)">Key works! Click Save Key to continue.</span>';
+      msg.innerHTML = '<span style="color:var(--green)">✅ Key works! Click "Save &amp; Connect".</span>';
     } else {
-      const err = await res.json().catch(() => ({}));
-      resultEl.innerHTML = '<span style="color:var(--accent)">Invalid key: ' + (err?.error?.message || 'please check and try again') + '</span>';
+      const d = await res.json().catch(()=>({}));
+      msg.innerHTML = `<span style="color:var(--accent)">❌ ${d?.error?.message || 'Invalid key — please check and retry.'}</span>`;
     }
   } catch(e) {
-    resultEl.innerHTML = '<span style="color:var(--accent)">Network error. Make sure you are online. IMPORTANT: The app must be hosted on GitHub Pages — it will NOT work when opened as a local file due to browser security.</span>';
+    msg.innerHTML = '<span style="color:var(--accent)">Network error. Make sure this page is served over HTTPS (e.g. GitHub Pages), not opened as a local file.</span>';
   }
 }
-function updateApiStatus() {
-  const key = localStorage.getItem('sl_gemini_key');
-  const dot = document.getElementById('apiDot');
-  const status = document.getElementById('apiStatus');
-  if (key) {
-    dot.classList.add('connected');
-    status.textContent = 'API Connected';
-  } else {
-    dot.classList.remove('connected');
-    status.textContent = 'Setup API Key';
-  }
-}
-updateApiStatus();
 
-// ======= TAB NAVIGATION =======
-function showTab(name) {
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active');
-  const tabs = ['dashboard','scripts','objections','email','nextsteps','qualify','dispos'];
-  const idx = tabs.indexOf(name);
-  document.querySelectorAll('.nav-tab')[idx].classList.add('active');
+// ─────────────────────────────────────────────
+// NAVIGATION
+// ─────────────────────────────────────────────
+function nav(el, tabId) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(t => t.classList.remove('active'));
+  if (el) el.classList.add('active');
+  document.getElementById('tab-' + tabId).classList.add('active');
 }
 
-// ======= GEMINI API CALL =======
+// ─────────────────────────────────────────────
+// GEMINI CALL — robust with model fallback
+// ─────────────────────────────────────────────
 async function callGemini(prompt) {
-  const key = localStorage.getItem('sl_gemini_key');
-  if (!key) {
-    openSettings();
-    throw new Error('No API key set. Please add your Gemini API key.');
-  }
+  const key = localStorage.getItem('sl_api_key');
+  if (!key) { openModal(); throw new Error('No API key — please connect your Gemini key first.'); }
 
-  // Current free-tier models as of March 2026
-  const models = [
-    'gemini-2.5-flash-preview-04-17',
-    'gemini-2.5-flash',
-    'gemini-2.5-flash-lite-preview-06-17',
-    'gemini-2.5-pro',
+  const MODELS = [
+    'gemini-2.0-flash',
     'gemini-1.5-flash',
+    'gemini-1.5-flash-8b',
+    'gemini-pro'
   ];
 
-  let lastError = null;
-  let allQuotaExhausted = true;
-
-  for (const model of models) {
+  let lastErr = '';
+  for (const model of MODELS) {
     try {
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ role: 'user', parts: [{ text: prompt }] }],
-          generationConfig: {
-            temperature: 0.3,
-            maxOutputTokens: 1500,
-            topK: 40,
-            topP: 0.95
-          },
-          safetySettings: [
-            { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_NONE' },
-            { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_NONE' },
-            { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_NONE' },
-            { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' }
-          ]
-        })
-      });
-
-      // Model doesn't exist — try next
-      if (response.status === 404) { lastError = `Model ${model} not found`; continue; }
-
-      const data = await response.json().catch(() => ({}));
-
-      if (!response.ok) {
-        const msg = data?.error?.message || `HTTP ${response.status}`;
-
-        // Invalid key — no point trying other models
-        if (response.status === 401 || response.status === 403 ||
-            msg.toLowerCase().includes('api key not valid') ||
-            msg.toLowerCase().includes('invalid api key')) {
-          throw new Error('❌ Invalid API key. Click "Setup API Key" (top right) and re-enter your key from aistudio.google.com.');
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ role:'user', parts:[{ text: prompt }] }],
+            generationConfig: { temperature:0.3, maxOutputTokens:1400, topK:40, topP:0.95 },
+            safetySettings: [
+              { category:'HARM_CATEGORY_HARASSMENT',        threshold:'BLOCK_NONE' },
+              { category:'HARM_CATEGORY_HATE_SPEECH',       threshold:'BLOCK_NONE' },
+              { category:'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold:'BLOCK_NONE' },
+              { category:'HARM_CATEGORY_DANGEROUS_CONTENT', threshold:'BLOCK_NONE' }
+            ]
+          })
         }
+      );
 
-        // Quota exhausted on this model — try next one
-        if (response.status === 429 || msg.toLowerCase().includes('quota')) {
-          lastError = `quota_exceeded`;
-          continue;
+      if (res.status === 404) { lastErr = `Model ${model} not found`; continue; }
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        const msg = data?.error?.message || `HTTP ${res.status}`;
+        if (res.status === 401 || res.status === 403 || msg.toLowerCase().includes('api key')) {
+          throw new Error('❌ Invalid API key. Open Settings (top right) and re-enter your key from aistudio.google.com.');
         }
-
-        // Other error — try next model
-        lastError = msg;
-        allQuotaExhausted = false;
-        continue;
+        if (res.status === 429 || msg.toLowerCase().includes('quota')) { lastErr = 'quota'; continue; }
+        lastErr = msg; continue;
       }
 
       const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
       if (text) return text;
+      lastErr = 'Empty response'; continue;
 
-      lastError = 'Empty response';
-      continue;
-
-    } catch (e) {
-      // Re-throw errors we intentionally threw above
+    } catch(e) {
       if (e.message.startsWith('❌')) throw e;
-
-      if (e.message.includes('Failed to fetch') || e.message.includes('NetworkError') || e.name === 'TypeError') {
-        throw new Error('🌐 Network error — check your internet connection and try again.');
+      if (e.name === 'TypeError' || e.message.includes('Failed to fetch')) {
+        throw new Error('🌐 Network error — make sure you are online and the page is on GitHub Pages (HTTPS), not opened as a local file.');
       }
-
-      lastError = e.message;
-      continue;
+      lastErr = e.message; continue;
     }
   }
 
-  // All models failed — give a helpful message
-  if (lastError === 'quota_exceeded' || allQuotaExhausted) {
-    throw new Error(
-      '⏳ Daily quota reached on all free models.\n\n' +
-      'You have 2 options:\n' +
-      '1. Wait until tomorrow — the free quota resets every 24 hours.\n' +
-      '2. Go to aistudio.google.com → "Get API key" → create a NEW key and paste it in Settings (top right).'
-    );
+  if (lastErr === 'quota') {
+    throw new Error('⏳ Daily free quota reached. Wait until tomorrow for the quota to reset, or create a new API key at aistudio.google.com and paste it in Settings.');
   }
-
-  throw new Error('❌ Could not get a response. Please check your API key in Settings and try again.');
+  throw new Error('❌ Could not get a response. Check your API key in Settings and try again.\n\nDetail: ' + lastErr);
 }
 
-function showLoading(el) {
-  el.classList.add('visible');
-  el.querySelector('.ai-content').innerHTML = '<div class="loading">🤖 <span>Checking playbook</span><span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></div>';
+// ─────────────────────────────────────────────
+// UI HELPERS
+// ─────────────────────────────────────────────
+function setLoading(boxId) {
+  const box = document.getElementById(boxId);
+  box.classList.add('show');
+  box.querySelector('.ai-box-body').innerHTML =
+    '<div class="loading-wrap"><div class="loader"></div><span>Checking playbook…</span></div>';
 }
-function showResult(contentEl, text) {
-  // Simple markdown-like formatting
+
+function setResult(bodyId, text) {
   const formatted = text
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/^### (.*$)/gm, '<strong style="color:var(--accent3)">$1</strong>')
-    .replace(/^## (.*$)/gm, '<strong style="font-size:14px;color:var(--accent2)">$1</strong>')
-    .replace(/^# (.*$)/gm, '<strong style="font-size:15px;color:var(--accent)">$1</strong>');
-  contentEl.innerHTML = formatted;
+    .replace(/^### (.+)$/gm, '<strong style="color:var(--cyan)">$1</strong>')
+    .replace(/^## (.+)$/gm, '<strong style="color:var(--accent-bright);font-size:13px">$1</strong>')
+    .replace(/^# (.+)$/gm, '<strong style="color:var(--text);font-size:14px">$1</strong>');
+  document.getElementById(bodyId).innerHTML = formatted;
 }
 
-// ======= CALL SCRIPTS =======
-function selectScript(el, type) {
-  document.querySelectorAll('.script-card').forEach(c => c.classList.remove('selected'));
+function setError(bodyId, msg) {
+  document.getElementById(bodyId).innerHTML =
+    `<span style="color:var(--accent)">${msg.replace(/\n/g,'<br>')}</span>`;
+}
+
+function setBtn(id, disabled, label) {
+  const b = document.getElementById(id);
+  if (!b) return;
+  b.disabled = disabled;
+  b.textContent = label;
+}
+
+async function copyText(bodyId, btn) {
+  const txt = document.getElementById(bodyId).innerText;
+  try {
+    await navigator.clipboard.writeText(txt);
+    btn.textContent = '✅ Copied!';
+    setTimeout(() => btn.textContent = '📋 Copy to Clipboard', 2000);
+  } catch { alert('Copy failed — please select and copy manually.'); }
+}
+
+// ─────────────────────────────────────────────
+// CALL SCRIPTS
+// ─────────────────────────────────────────────
+function pickScript(el, type) {
+  document.querySelectorAll('#scriptCards .sel-card').forEach(c => c.classList.remove('selected'));
   el.classList.add('selected');
-  selectedScript = type;
-  document.getElementById('scriptCustomInput').style.display = 'block';
+  activeScript = type;
+  document.getElementById('scriptInputs').style.display = 'block';
+  document.getElementById('scriptBox').classList.remove('show');
 }
 
-async function getScript() {
-  if (!selectedScript) return alert('Please select a script type first.');
-  const result = document.getElementById('scriptResult');
-  const content = document.getElementById('scriptContent');
-  showLoading(result);
-  const prospect = document.getElementById('scriptProspect').value || '[Prospect Name]';
-  const company = document.getElementById('scriptCompany').value || '[Company]';
-  const persona = document.getElementById('scriptPersona').value || '';
-  const scriptMap = {
-    cold_call: 'Barbara cold call script',
-    short_advanced: 'Short and focused advanced pitch',
-    wp_script: 'White paper/inbound script',
-    ai_feature: 'AI feature script',
-    zoom_qual: 'Zoom qualification call script',
-    demo_handoff: 'Demo handoff to AE script',
-    dev_magic: 'Magic paragraph for Dev/Engineering persona',
-    qa_magic: 'Magic paragraph for QA/QE persona',
+async function runScript() {
+  if (!activeScript) { alert('Please select a script first.'); return; }
+  const prospect = document.getElementById('sProspect').value.trim() || '[Prospect Name]';
+  const company  = document.getElementById('sCompany').value.trim()  || '[Company]';
+  const persona  = document.getElementById('sPersona').value         || 'not specified';
+
+  const names = {
+    cold_call:'Barbara cold call script', short_advanced:'Short & focused advanced pitch',
+    wp_script:'White paper/inbound script', ai_feature:'AI feature outbound script',
+    zoom_qual:'Zoom qualification call script', demo_handoff:'Demo handoff to AE script',
+    dev_magic:'Magic paragraph — Dev/Engineering persona', qa_magic:'Magic paragraph — QA/QE persona'
   };
-  const scriptName = scriptMap[selectedScript];
-  const prompt = `You are the SeaLights BDR Coach. Use ONLY the playbook knowledge below. Do not add any information not in the playbook.
+
+  setLoading('scriptBox');
+  setBtn('scriptBtn', true, '⏳ Loading…');
+
+  const prompt = `You are the SeaLights BDR Coach. Use ONLY the playbook knowledge below. Never add information not in the playbook.
 
 PLAYBOOK:
 ${PLAYBOOK}
 
-TASK: Provide the complete "${scriptName}" script. 
+TASK: Provide the complete "${names[activeScript]}" script.
 Prospect Name: ${prospect}
 Company: ${company}
-Persona: ${persona || 'not specified'}
+Persona: ${persona}
 
-Replace placeholders like [Prospect Name], [Company], [BDR Name] etc. with the provided details.
+Replace placeholders like [Prospect Name], [Company], [BDR Name] with the provided details.
 Format clearly with sections. Include all CTAs and variations from the playbook.
-If the persona is specified, add a note at the end about any persona-specific adjustments from the playbook.`;
+If a persona is specified, add a brief note at the end about any persona-specific adjustments.`;
+
   try {
     const text = await callGemini(prompt);
-    showResult(content, text);
-  } catch (e) {
-    content.textContent = '❌ Error: ' + e.message;
+    setResult('scriptOut', text);
+  } catch(e) {
+    setError('scriptOut', e.message);
+  } finally {
+    setBtn('scriptBtn', false, '🎯 Get Script');
   }
 }
 
-// ======= OBJECTION HANDLER =======
-function selectObjPill(el, type) {
-  document.querySelectorAll('.obj-pill').forEach(p => p.classList.remove('selected'));
+// ─────────────────────────────────────────────
+// OBJECTION HANDLER
+// ─────────────────────────────────────────────
+const OBJ_LABELS = {
+  send_email: 'Send me an email',
+  inhouse_solution: 'We have an inhouse solution',
+  already_tool: 'We already have a tool',
+  no_budget: "We don't have budget",
+  not_dm: "I'm not a DM",
+  not_relevant: "That's not our focus / not relevant",
+  how_does_it_work: 'How does it work?',
+  not_qa: "I don't handle QA",
+  tricentis_existing: 'We already use Tricentis / another automation platform',
+  clevel_exec: 'High-Level Exec / C-Level pushback',
+  not_right_person: "I'm not the right person",
+  sonarqube: 'We use SonarQube / already have a coverage tool'
+};
+
+function pickObj(el, type) {
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('selected'));
   el.classList.add('selected');
-  selectedObjection = type;
-  const labels = {
-    send_email: 'Send me an email',
-    inhouse_solution: 'We have an inhouse solution',
-    already_tool: 'We already have a tool',
-    no_budget: 'We don\'t have budget',
-    not_dm: "I'm not a DM",
-    not_relevant: "That's not our focus / not relevant",
-    how_does_it_work: 'How does it work?',
-    not_qa: "I don't handle QA",
-    tricentis_existing: 'We already use Tricentis / another automation platform',
-    clevel_exec: 'High-Level Exec / C-Level pushback',
-    not_right_person: "I'm not the right person",
-    sonarqube: 'We use SonarQube / already have a coverage tool',
-  };
-  document.getElementById('customObjection').value = labels[type] || '';
-  handleObjection();
+  document.getElementById('objInput').value = OBJ_LABELS[type] || '';
+  runObj();
 }
 
-async function handleObjection() {
-  const objText = document.getElementById('customObjection').value.trim();
-  if (!objText) return alert('Please select or type an objection.');
-  const result = document.getElementById('objectionResult');
-  const content = document.getElementById('objectionContent');
-  showLoading(result);
-  const prompt = `You are the SeaLights BDR Coach. Use ONLY the playbook knowledge below. Do not add any information not in the playbook. If the answer is not in the playbook, say: "This specific scenario isn't covered in our playbook — please check with your manager."
+async function runObj() {
+  const objText = document.getElementById('objInput').value.trim();
+  if (!objText) { alert('Please select or type an objection.'); return; }
+
+  setLoading('objBox');
+  setBtn('objBtn', true, '⏳ Loading…');
+
+  const prompt = `You are the SeaLights BDR Coach. Use ONLY the playbook knowledge below. If the answer is not in the playbook, say: "This specific scenario isn't covered in our playbook — please check with your manager."
 
 PLAYBOOK:
 ${PLAYBOOK}
@@ -1369,108 +1512,115 @@ Provide the exact playbook response to this objection. Include:
 3. The CTA to use at the end
 
 Format clearly. Be direct and practical.`;
+
   try {
     const text = await callGemini(prompt);
-    showResult(content, text);
-  } catch (e) {
-    content.textContent = '❌ Error: ' + e.message;
+    setResult('objOut', text);
+  } catch(e) {
+    setError('objOut', e.message);
+  } finally {
+    setBtn('objBtn', false, '🛡️ Get Playbook Response');
   }
 }
 
-// ======= EMAIL DRAFTER =======
-async function draftEmail() {
-  const result = document.getElementById('emailResult');
-  const content = document.getElementById('emailContent');
-  const name = document.getElementById('emailName').value || '[First Name]';
-  const company = document.getElementById('emailCompany').value || '[Company]';
-  const title = document.getElementById('emailTitle').value || '';
-  const emailType = document.getElementById('emailType').value;
-  const callNotes = document.getElementById('emailCallNotes').value;
-  const linkedin = document.getElementById('emailLinkedin').value;
-  const pain = document.getElementById('emailPain').value;
-  showLoading(result);
+// ─────────────────────────────────────────────
+// EMAIL DRAFTER
+// ─────────────────────────────────────────────
+async function runEmail() {
+  const name    = document.getElementById('eName').value.trim()    || '[First Name]';
+  const company = document.getElementById('eCompany').value.trim() || '[Company]';
+  const title   = document.getElementById('eTitle').value.trim()   || 'not provided';
+  const eType   = document.getElementById('eType').value;
+  const notes   = document.getElementById('eNotes').value.trim()   || 'not provided';
+  const li      = document.getElementById('eLinkedin').value.trim()|| 'not provided';
+  const pain    = document.getElementById('ePain').value           || 'not specified';
+
   const typeLabels = {
     cold_call_followup: 'Cold Call Follow-Up (prospect asked for more info)',
-    no_response: 'No Response Follow-Up (they have not replied)',
-    invite: 'Demo Invite / Suggested Meeting Slot',
-    meeting_declined: 'Meeting Declined — Reschedule',
-    meeting_accepted: 'Meeting Accepted — Confirmation with qualification ask',
-    assistant_fwd: 'Via Assistant — message to forward to the lead',
+    no_response:        'No Response Follow-Up (they have not replied)',
+    invite:             'Demo Invite / Suggested Meeting Slot',
+    meeting_declined:   'Meeting Declined — Reschedule',
+    meeting_accepted:   'Meeting Accepted — Confirmation with qualification ask',
+    assistant_fwd:      'Via Assistant — message to forward to the lead'
   };
-  const prompt = `You are the SeaLights BDR Coach. Use ONLY the email templates and playbook knowledge below. Do not invent information, statistics, or claims not present in the playbook.
+
+  setLoading('emailBox');
+  setBtn('emailBtn', true, '⏳ Drafting…');
+
+  const prompt = `You are the SeaLights BDR Coach. Use ONLY the email templates and playbook knowledge below. Do not invent statistics or claims not in the playbook.
 
 PLAYBOOK:
 ${PLAYBOOK}
 
-TASK: Draft a "${typeLabels[emailType]}" email.
+TASK: Draft a "${typeLabels[eType]}" email.
 Prospect Name: ${name}
 Company: ${company}
-Title: ${title || 'not provided'}
-Call Notes: ${callNotes || 'not provided'}
-LinkedIn Info: ${linkedin || 'not provided'}
-Primary Pain Identified: ${pain || 'not specified'}
+Title: ${title}
+Call Notes: ${notes}
+LinkedIn Info: ${li}
+Primary Pain: ${pain}
 
 Instructions:
 1. Use the email template from the playbook as the base structure
-2. Personalize using the call notes and LinkedIn info provided
-3. Keep it aligned with the playbook tone (professional, brief, non-pushy)
-4. Include the subject line
-5. Do not use statistics or claims not mentioned in the playbook
+2. Personalize using call notes and LinkedIn info
+3. Keep it aligned with playbook tone: professional, brief, non-pushy
+4. Include the subject line at the top
+5. Do not use statistics or claims not in the playbook
 6. End with the appropriate CTA from the playbook
 
 Format: Subject line first, then the email body.`;
+
   try {
     const text = await callGemini(prompt);
-    showResult(content, text);
-    document.getElementById('emailActions').style.display = 'flex';
-  } catch (e) {
-    content.textContent = '❌ Error: ' + e.message;
+    setResult('emailOut', text);
+    document.getElementById('emailBox').classList.add('show');
+  } catch(e) {
+    setError('emailOut', e.message);
+    document.getElementById('emailBox').classList.add('show');
+  } finally {
+    setBtn('emailBtn', false, '✉️ Draft Email');
   }
 }
 
-function copyEmail() {
-  const text = document.getElementById('emailContent').innerText;
-  navigator.clipboard.writeText(text).then(() => {
-    const btn = event.target;
-    btn.textContent = '✅ Copied!';
-    setTimeout(() => btn.textContent = '📋 Copy to Clipboard', 2000);
-  });
-}
+// ─────────────────────────────────────────────
+// NEXT STEPS
+// ─────────────────────────────────────────────
+const OUTCOME_LABELS = {
+  connected_interested:        "Connected with prospect — heard the pitch and is interested but no meeting set yet",
+  demo_scheduled:              "Demo / Meeting was scheduled",
+  followup_hangup:             "Connected but they hung up or didn't hear the full pitch — need to follow up",
+  not_interested:              "Prospect said they are not interested",
+  no_answer:                   "No answer on the call",
+  meeting_declined:            "Meeting invite was declined",
+  meeting_tentative:           "Meeting was marked as tentative",
+  meeting_proposed_new_time:   "Prospect proposed a new meeting time",
+  meeting_accepted:            "Meeting was accepted / confirmed"
+};
 
-// ======= NEXT STEPS =======
-function selectOutcome(el, type) {
-  document.querySelectorAll('.outcome-btn').forEach(b => b.classList.remove('selected'));
+function pickOutcome(el, type) {
+  document.querySelectorAll('#outcomeCards .sel-card').forEach(c => c.classList.remove('selected'));
   el.classList.add('selected');
-  selectedOutcome = type;
-  document.getElementById('nextStepsContext').style.display = 'block';
+  activeOutcome = type;
+  document.getElementById('nsInputs').style.display = 'block';
+  document.getElementById('nsBox').classList.remove('show');
 }
 
-async function getNextSteps() {
-  if (!selectedOutcome) return alert('Please select a call outcome.');
-  const result = document.getElementById('nextStepsResult');
-  const content = document.getElementById('nextStepsContent');
-  showLoading(result);
-  const prospect = document.getElementById('nsProspect').value || '[Prospect]';
-  const notes = document.getElementById('nsNotes').value;
-  const outcomeLabels = {
-    connected_interested: 'Connected with prospect — they heard the pitch and are interested but no meeting set yet',
-    demo_scheduled: 'Demo / Meeting was scheduled',
-    followup_hangup: 'Connected but they hung up or didn\'t hear the full pitch — need to follow up',
-    not_interested: 'Prospect said they are not interested',
-    no_answer: 'No answer on the call',
-    meeting_declined: 'Meeting invite was declined',
-    meeting_tentative: 'Meeting was marked as tentative',
-    meeting_proposed_new_time: 'Prospect proposed a new time',
-    meeting_accepted: 'Meeting was accepted / confirmed',
-  };
+async function runNextSteps() {
+  if (!activeOutcome) { alert('Please select a call outcome.'); return; }
+  const prospect = document.getElementById('nsName').value.trim()  || '[Prospect]';
+  const notes    = document.getElementById('nsNotes').value.trim() || 'none';
+
+  setLoading('nsBox');
+  setBtn('nsBtn', true, '⏳ Loading…');
+
   const prompt = `You are the SeaLights BDR Coach. Use ONLY the playbook knowledge below. Do not add any steps not in the playbook.
 
 PLAYBOOK:
 ${PLAYBOOK}
 
 TASK: The BDR just had a call with ${prospect}.
-Outcome: ${outcomeLabels[selectedOutcome]}
-Additional notes: ${notes || 'none'}
+Outcome: ${OUTCOME_LABELS[activeOutcome]}
+Additional notes: ${notes}
 
 Provide the exact next steps according to the playbook. Include:
 1. Immediate actions (what to do right now)
@@ -1480,22 +1630,28 @@ Provide the exact next steps according to the playbook. Include:
 5. What emoji to use in the Slack channel (if inbound)
 
 Be specific and actionable. Reference exact playbook language.`;
+
   try {
     const text = await callGemini(prompt);
-    showResult(content, text);
-  } catch (e) {
-    content.textContent = '❌ Error: ' + e.message;
+    setResult('nsOut', text);
+  } catch(e) {
+    setError('nsOut', e.message);
+  } finally {
+    setBtn('nsBtn', false, '📋 Get Next Steps');
   }
 }
 
-// ======= QUALIFY =======
-async function qualifyLead() {
-  const input = document.getElementById('qualifyInput').value.trim();
-  if (!input) return alert('Please describe the lead first.');
-  const result = document.getElementById('qualifyResult');
-  const content = document.getElementById('qualifyContent');
-  showLoading(result);
-  const prompt = `You are the SeaLights BDR Coach. Use ONLY the ICP qualification criteria from the playbook below. Do not use external knowledge.
+// ─────────────────────────────────────────────
+// QUALIFICATION
+// ─────────────────────────────────────────────
+async function runQualify() {
+  const input = document.getElementById('qualInput').value.trim();
+  if (!input) { alert('Please describe the lead first.'); return; }
+
+  setLoading('qualBox');
+  setBtn('qualBtn', true, '⏳ Analyzing…');
+
+  const prompt = `You are the SeaLights BDR Coach. Use ONLY the ICP qualification criteria from the playbook below.
 
 PLAYBOOK:
 ${PLAYBOOK}
@@ -1505,17 +1661,20 @@ TASK: Based on the playbook's ICP qualification criteria, assess whether this le
 
 Provide:
 1. ✅ BOOK or ❌ DON'T BOOK — with clear reasoning
-2. Check each qualification criterion from the playbook (go through the full list)
+2. Check each qualification criterion from the playbook (go through the full checklist)
 3. Any red flags to watch out for
-4. What qualification questions to still ask if unclear
+4. What qualification questions to still ask if anything is unclear
 5. Suggested dispo code from the playbook if not booking
 
 Be direct and reference specific playbook rules.`;
+
   try {
     const text = await callGemini(prompt);
-    showResult(content, text);
-  } catch (e) {
-    content.textContent = '❌ Error: ' + e.message;
+    setResult('qualOut', text);
+  } catch(e) {
+    setError('qualOut', e.message);
+  } finally {
+    setBtn('qualBtn', false, '✅ Should I Book This Lead?');
   }
 }
 </script>
